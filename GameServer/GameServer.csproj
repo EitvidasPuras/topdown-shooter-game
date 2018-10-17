@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WindowsFormsApp1\WindowsFormsApp1.csproj" />
+    <ProjectReference Include="..\WindowsFormsApp1\GameClient.csproj" />
   </ItemGroup>
 
 </Project>

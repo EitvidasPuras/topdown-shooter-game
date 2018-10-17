@@ -1,165 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using WebsiteForm.Models;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
-    {
-        private System.Drawing.Graphics formGraphics;
-
-        Program1 p1 = new Program1();
-        Player myPlayer = new Player();
-        String url1 = "";
-        public Form1()
-        {
-            InitializeComponent();
-            formGraphics = this.CreateGraphics();
-        }
-
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
-        // pagetina visus playerius ir juos atvaizduoja, vėliau sukuria playeri esančiam klientui
-        private async void Form1_LoadAsync(object sender, EventArgs e)
-        {
-            Console.WriteLine("0)\tGet all player");
-            p1.client.BaseAddress = new Uri("https://topdown-shooter.azurewebsites.net/");
-            p1.client.DefaultRequestHeaders.Accept.Clear();
-            p1.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(p1.mediaType));
-
-            ICollection<Player> playersList = await p1.GetAllPlayerAsync(p1.client.BaseAddress.PathAndQuery);
-
-            Random rnd = new Random();
-
-            foreach (Player p in playersList)
-            {
-                //Coordinates coordinates = new Coordinates
-                //{
-                //    Id = p.Id,
-                //    PosX = rnd.Next(10, this.Width),
-                //    PosY = rnd.Next(10, this.Height)
-                //};
-                //var patchStatusCode = await p1.PatchPlayerAsync(coordinates);
-                this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
-            }
-
-            // Create a new player
-            Console.WriteLine("1.1)\tCreate the player");
-            myPlayer = new Player
-            {
-                Name = "Studentas-" + playersList.Count.ToString(),
-                Score = 100,
-                PosX = rnd.Next(10, this.Width),
-                PosY = rnd.Next(10, this.Height)
-            };
-
-            var url = await p1.CreatePlayerAsync(myPlayer);
-
-            url1 = url.PathAndQuery;
-            myPlayer = await p1.GetPlayerAsync(url.PathAndQuery);
-
-            this.Form1_PaintDot((int)myPlayer.PosX, (int)myPlayer.PosY, Color.Blue);
-
-            playersList = await p1.GetAllPlayerAsync(p1.client.BaseAddress.PathAndQuery);          
-            
-        }
-
-        // paint dot
-        private void Form1_PaintDot(int x, int y, Color color)
-        {
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(color);
-            Rectangle rec = new Rectangle(x, y, 10, 10);
-            formGraphics.FillRectangle(myBrush, rec);
-            myBrush.Dispose();
-            
-        }
-
-        //deletint playeri?
-        private async void Form1_FormClosingAsync(object sender, FormClosingEventArgs e)
-        {
-            //Delete the player
-            //Console.WriteLine("4.3)\tDelete the player");
-            //var statusCode = await p1.DeletePlayerAsync(myPlayer.Id);
-            //Console.WriteLine($"Deleted (HTTP Status = {(int)statusCode})");
-        }
-
-        //timeris getina visus playerius ir atvaizduoja pagal koordinates
-        private async void timer1_TickAsync(object sender, EventArgs e)
-        {
-            this.Invalidate();
-            ICollection<Player> playersList = await p1.GetAllPlayerAsync(p1.client.BaseAddress.PathAndQuery);
-
-            Random rnd = new Random();
-
-            foreach (Player p in playersList)
-            {
-
-                if (p.Id == myPlayer.Id)
-                {
-                    this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Blue);
-                }
-                else
-                {
-                    this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
-                }
-            }
-        }
-
-        //reaguoja į paspaustus mygtukus
-        private async void Form1_KeyPressAsync(object sender, KeyPressEventArgs e)
-        {        
-            //atnaujina kliento objektą iš duombazes
-            myPlayer = await p1.GetPlayerAsync(url1);
-            Coordinates coordinates = new Coordinates
-            {
-                Id = myPlayer.Id,
-                PosX = myPlayer.PosX,
-                PosY = myPlayer.PosY
-            };
-            var patchStatusCode = (Object)null;
-
-            switch (e.KeyChar)
-            {
-                case 'w':
-                    coordinates.PosY -= 15;
-                    patchStatusCode = await p1.PatchPlayerAsync(coordinates);
-                    break;
-                case 'a':
-                    coordinates.PosX -= 15;
-                    patchStatusCode = await p1.PatchPlayerAsync(coordinates);
-                    break;
-                case 's':
-                    coordinates.PosY += 15;
-                    patchStatusCode = await p1.PatchPlayerAsync(coordinates);
-                    break;
-                case 'd':
-                    coordinates.PosX += 15;
-                    patchStatusCode = await p1.PatchPlayerAsync(coordinates);
-                    break;
-                case 'x':
-                    var statusCode = await p1.DeletePlayerAsync(myPlayer.Id);
-                    this.Close();
-                    break;
-            }
-        }
-    }
-    class Program1
+    class RequestsController
     {
         public HttpClient client = new HttpClient();
         public string requestUri = "api/player/";
