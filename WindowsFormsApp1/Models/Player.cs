@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WebsiteForm.Models
+namespace GameClient.Models
 {
     public class Player
     {
@@ -8,9 +8,29 @@ namespace WebsiteForm.Models
         public long Score { get; set; }
         public long PosX { get; set; }
         public long PosY { get; set; }
+        public int Health { get; set; }
+
+        public Weapon EquippedWeapon = null;
+        public Weapon PrimaryWeapon = null;
+        public Weapon SecondaryWeapon = null;
 
         public Player()
         {
+        }
+
+        public void equipPrimary()
+        {
+            if (PrimaryWeapon != null)
+            {
+                EquippedWeapon = PrimaryWeapon;
+            }
+        }
+        public void equipSecondary()
+        {
+            if (SecondaryWeapon != null)
+            {
+                EquippedWeapon = SecondaryWeapon;
+            }
         }
     }
 }

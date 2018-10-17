@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WebsiteForm.Models
+namespace GameClient.Models
 {
     public class Coordinates
     {

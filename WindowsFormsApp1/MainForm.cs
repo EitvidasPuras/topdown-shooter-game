@@ -7,7 +7,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WebsiteForm.Models;
+using GameClient;
+using GameClient.Models;
 
 namespace WindowsFormsApp1
 {
@@ -65,8 +66,8 @@ namespace WindowsFormsApp1
 
             this.Form1_PaintDot((int)myPlayer.PosX, (int)myPlayer.PosY, Color.Blue);
 
-            playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);          
-            
+            playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+
         }
 
         // paint dot
@@ -76,7 +77,7 @@ namespace WindowsFormsApp1
             Rectangle rec = new Rectangle(x, y, 10, 10);
             formGraphics.FillRectangle(myBrush, rec);
             myBrush.Dispose();
-            
+
         }
 
         //deletint playeri?
@@ -112,7 +113,7 @@ namespace WindowsFormsApp1
 
         //reaguoja į paspaustus mygtukus
         private async void Form1_KeyPressAsync(object sender, KeyPressEventArgs e)
-        {        
+        {
             //atnaujina kliento objektą iš duombazes
             myPlayer = await requestController.GetPlayerAsync(url1);
             Coordinates coordinates = new Coordinates

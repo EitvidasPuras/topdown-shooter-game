@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-namespace WebsiteForm.Models
+namespace GameClient.Models
 {
     public class PlayerContext : DbContext
     {

@@ -6,9 +6,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using WebsiteForm.Models;
+using GameClient.Models;
 
-namespace WindowsFormsApp1
+namespace GameClient
 {
     class RequestsController
     {
