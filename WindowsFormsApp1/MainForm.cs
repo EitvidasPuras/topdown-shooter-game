@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using GameClient;
 using GameClient.Models;
 
-namespace WindowsFormsApp1
+namespace GameClient
 {
     public partial class MainForm : Form
     {
