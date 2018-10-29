@@ -211,6 +211,9 @@
   <ItemGroup>
     <Analyzer Include="..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="generatedFiles\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
