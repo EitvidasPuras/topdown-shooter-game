@@ -168,6 +168,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="generatedFiles\Controllers\LogController.cs" />
+    <Compile Include="generatedFiles\Controllers\PlayerController.cs" />
+    <Compile Include="generatedFiles\Controllers\RequestsController.cs" />
+    <Compile Include="generatedFiles\Interfaces\IBuilder.cs" />
+    <Compile Include="generatedFiles\Interfaces\IObstacleFactory.cs" />
+    <Compile Include="generatedFiles\Models\AbstractWeaponFactory.cs" />
+    <Compile Include="generatedFiles\Models\AK47.cs" />
+    <Compile Include="generatedFiles\Models\AnyWeaponFactory.cs" />
+    <Compile Include="generatedFiles\Models\BuilderDirector.cs" />
+    <Compile Include="generatedFiles\Models\Circle.cs" />
+    <Compile Include="generatedFiles\Models\DesertEagle.cs" />
+    <Compile Include="generatedFiles\Models\M4A1.cs" />
+    <Compile Include="generatedFiles\Models\MainForm.cs" />
+    <Compile Include="generatedFiles\Models\MapGenerator.cs" />
+    <Compile Include="generatedFiles\Models\Obstacle.cs" />
+    <Compile Include="generatedFiles\Models\ObstacleFactory.cs" />
+    <Compile Include="generatedFiles\Models\P250.cs" />
+    <Compile Include="generatedFiles\Models\Player.cs" />
+    <Compile Include="generatedFiles\Models\Primary.cs" />
+    <Compile Include="generatedFiles\Models\PrimaryWeaponBuilder.cs" />
+    <Compile Include="generatedFiles\Models\Rectangle.cs" />
+    <Compile Include="generatedFiles\Models\Secondary.cs" />
+    <Compile Include="generatedFiles\Models\SecondaryWeaponBuilder.cs" />
+    <Compile Include="generatedFiles\Models\SingletonLog.cs" />
+    <Compile Include="generatedFiles\Models\Weapon.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,9 +236,7 @@
   <ItemGroup>
     <Analyzer Include="..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="generatedFiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
