@@ -12,14 +12,5 @@ namespace GameServer.Models
         public Player()
         {
         }
-
-        public bool checkEquality(Player player)
-        {
-            if (this.PosX != player.PosX)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }

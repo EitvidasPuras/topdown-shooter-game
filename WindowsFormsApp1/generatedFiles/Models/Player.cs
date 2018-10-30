@@ -1,7 +1,9 @@
-/**
- * @(#) Player.cs
- */
 
+
+using System;
+/**
+* @(#) Player.cs
+*/
 namespace GameServer
 {
 	namespace Models
@@ -26,32 +28,51 @@ namespace GameServer
 			
 			Weapon EquippedWeapon;
 			
-			boolean ChangedStatus;
+			bool ChangedStatus;
 			
-			public void equipPrimary(  )
+			public void equipPrimary()
 			{
-				
+                if (PrimaryWeapon != null)
+                {
+                    EquippedWeapon = PrimaryWeapon;
+                }
 			}
 			
-			public void equipSecondary(  )
+			public void equipSecondary()
 			{
-				
+                if (SecondaryWeapon != null)
+                {
+                    EquippedWeapon = SecondaryWeapon;
+                }
+            }
+			
+			public void pickupPrimary(Weapon gun)
+			{
+                if (PrimaryWeapon == null)
+                {
+                    PrimaryWeapon = gun;
+                    gun.equip();
+                }
 			}
 			
-			public void pickupPrimary( Weapon gun )
+			public void pickupSecondary(Weapon gun)
 			{
-				
-			}
+                if (SecondaryWeapon == null)
+                {
+                    SecondaryWeapon = gun;
+                    gun.equip();
+                }
+            }
 			
-			public void pickupSecondary( Weapon gun )
+			public bool checkEquality(Player newData)
 			{
-				
-			}
-			
-			public boolean checkEquality( Player newData )
-			{
-				return null;
-			}
+                if (this.PosX != newData.PosX)
+                {
+                    return true;
+                }
+                return false;
+                //TODO: add more equality checks
+            }
 			
 		}
 		

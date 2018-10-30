@@ -1,16 +1,19 @@
-/**
- * @(#) LogController.cs
- */
 
+
+using GameServer.Models;
+using System;
+/**
+* @(#) LogController.cs
+*/
 namespace GameServer
 {
 	namespace Controllers
 	{
 		public class LogController
 		{
-			public String getLog(  )
+			public String getLog()
 			{
-				return null;
+                return SingletonLog.getInstance().logText;
 			}
 			
 		}

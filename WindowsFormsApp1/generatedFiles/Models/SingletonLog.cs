@@ -1,27 +1,29 @@
-/**
- * @(#) SingletonLog.cs
- */
 
+
+using System;
+/**
+* @(#) SingletonLog.cs
+*/
 namespace GameServer
 {
 	namespace Models
 	{
 		public class SingletonLog
 		{
-			SingletonLog instance;
+            static SingletonLog instance;
 			
 			public String logText;
 			
-			public void getInstance(  )
+			public static SingletonLog getInstance(  )
 			{
-				
-			}
-			
-			void SingletonPlayer(  )
-			{
-				
-			}
-			
+                if (instance == null)
+                {
+                    instance = new SingletonLog();
+                }
+
+                return instance;
+            }
+
 		}
 		
 	}

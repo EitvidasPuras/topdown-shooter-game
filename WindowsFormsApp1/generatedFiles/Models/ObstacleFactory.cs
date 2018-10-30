@@ -6,7 +6,8 @@ namespace GameServer
 {
 	namespace Models
 	{
-		using Interfaces = GameServer.Interfaces;
+        using System;
+        using Interfaces = GameServer.Interfaces;
 		
 		public class ObstacleFactory : Interfaces.IObstacleFactory
 		{

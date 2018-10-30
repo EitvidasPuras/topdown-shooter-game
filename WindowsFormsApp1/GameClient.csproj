@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4CFACB19-1FA4-4434-91A5-CF4F67D5EC8C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WindowsFormsApp1</RootNamespace>
-    <AssemblyName>WindowsFormsApp1</AssemblyName>
+    <RootNamespace>GameClient</RootNamespace>
+    <AssemblyName>GameClient</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -169,8 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="generatedFiles\Controllers\LogController.cs" />
-    <Compile Include="generatedFiles\Controllers\PlayerController.cs" />
-    <Compile Include="generatedFiles\Controllers\RequestsController.cs" />
     <Compile Include="generatedFiles\Interfaces\IBuilder.cs" />
     <Compile Include="generatedFiles\Interfaces\IObstacleFactory.cs" />
     <Compile Include="generatedFiles\Models\AbstractWeaponFactory.cs" />
@@ -218,6 +216,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -94,6 +94,11 @@ namespace GameClient
             return response.StatusCode;
         }
 
+        public void getLogInformationAsync()
+        {
+
+        }
+
         ////static void Main()
         ////{
         ////    Console.WriteLine("Web API Client says: \"Hello World!\"");
