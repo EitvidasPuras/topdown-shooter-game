@@ -8,10 +8,7 @@ namespace GameServer
 	{
 		public abstract class AbstractWeaponFactory
 		{
-			public Weapon createWeapon( byte family, String type )
-			{
-				return null;
-			}
+            public abstract Weapon createWeapon(int id, string family, string type);
 			
 		}
 		

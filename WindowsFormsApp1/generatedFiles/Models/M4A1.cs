@@ -4,12 +4,16 @@
 
 namespace GameServer
 {
-	namespace Models
-	{
-		public class M4A1 : Primary
-		{
-		}
-		
-	}
-	
+    namespace Models
+    {
+        public class M4A1 : Primary
+        {
+            public M4A1(int id, string name, double fireRate = 0, int damage = 0, bool IsOnTheGround = true, int ammo = 0) : base(id, name, fireRate, damage, IsOnTheGround, ammo)
+            {
+            }
+      
+        }
+
+    }
+
 }
