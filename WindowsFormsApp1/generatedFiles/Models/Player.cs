@@ -25,6 +25,8 @@ namespace GameServer
 			Weapon PrimaryWeapon;
 			
 			Weapon SecondaryWeapon;
+
+            Weapon Grenade;
 			
 			Weapon EquippedWeapon;
 			

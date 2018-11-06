@@ -44,6 +44,16 @@ namespace GameServer
                     }
 
                 }
+                else
+                if (family.Equals("G"))
+                {
+                    if (type.Equals("Grenade"))
+                    {
+                        w = director.getWeapon(id, family, type);
+                        //w = new DesertEagle(id, "DesertEagle", 30, 60, true, 50);
+                    }
+
+                }
                 return w;
             }
 			
