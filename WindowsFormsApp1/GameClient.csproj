@@ -175,8 +175,8 @@
     <Compile Include="generatedFiles\Models\AbstractFactory\AbstractWeaponFactory.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\AK47.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\AnyWeaponFactory.cs" />
-    <Compile Include="generatedFiles\Models\AbstractFactory\Grenade.cs" />
-    <Compile Include="generatedFiles\Models\AbstractFactory\GrenadeAdapter.cs" />
+    <Compile Include="generatedFiles\Models\Adapter\Grenade.cs" />
+    <Compile Include="generatedFiles\Models\Adapter\GrenadeAdapter.cs" />
     <Compile Include="generatedFiles\Models\Bridge\DangerousImplementor.cs" />
     <Compile Include="generatedFiles\Models\Bridge\GoodImplementor.cs" />
     <Compile Include="generatedFiles\Models\Bridge\Implementor.cs" />
@@ -194,6 +194,7 @@
     <Compile Include="generatedFiles\Models\MainForm.cs" />
     <Compile Include="generatedFiles\Models\MapGenerator.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\P250.cs" />
+    <Compile Include="generatedFiles\Models\Observer\ObserverController.cs" />
     <Compile Include="generatedFiles\Models\Player.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\Primary.cs" />
     <Compile Include="generatedFiles\Models\Builder\PrimaryWeaponBuilder.cs" />

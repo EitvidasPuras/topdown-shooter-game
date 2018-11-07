@@ -1,14 +1,17 @@
-/**
- * @(#) MainForm.cs
- */
 
+
+using System.Collections.Generic;
+/**
+* @(#) MainForm.cs
+*/
 namespace GameClient
 {
-	public class MainForm
+	public class MainFormx
 	{
 		RequestsController requestsController;
 		
-		GameServer.Models.Player listOfPlayers;
+		List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
+        List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
 		
 		public void KeyPressed(  )
 		{
