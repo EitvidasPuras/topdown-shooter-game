@@ -19,6 +19,8 @@ namespace GameClient
         RequestsController requestController = new RequestsController();
         Player myPlayer = new Player();
         String url1 = "";
+        List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
+        List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
         public MainForm()
         {
             InitializeComponent();
