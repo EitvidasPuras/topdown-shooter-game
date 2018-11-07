@@ -40,14 +40,13 @@
             this.timer1.Interval = 120;
             this.timer1.Tick += new System.EventHandler(this.timer1_TickAsync);
             // 
-            // Form1
+            // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1067, 554);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "Form1";
+            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_LoadAsync);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPressAsync);

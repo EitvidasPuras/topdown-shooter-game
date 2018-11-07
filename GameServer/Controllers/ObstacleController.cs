@@ -22,104 +22,112 @@ namespace GameServer.Controllers
 
         // GET: api/Obstacle
         [HttpGet]
-        public IEnumerable<Obstacle> GetObstacle()
+        public IEnumerable<Obstacle> GetObstacles()
         {
-            return _context.Obstacle;
+            return _context.Circles.ToList()
+                .Cast<Obstacle>().Concat(_context.Rectangles.ToList())
+                .ToList();
         }
 
-        // GET: api/Obstacle/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetObstacle([FromRoute] int id)
+        [HttpGet("react")]
+        public ActionResult<string> react()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var obstacle = await _context.Obstacle.FindAsync(id);
-
-            if (obstacle == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(obstacle);
+            return _context.Rectangles.Find(1).imp.react();
         }
 
-        // PUT: api/Obstacle/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutObstacle([FromRoute] int id, [FromBody] Obstacle obstacle)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// GET: api/Obstacle/5
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetObstacle([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (id != obstacle.Id)
-            {
-                return BadRequest();
-            }
+        //    var obstacle = await _context.Obstacle.FindAsync(id);
 
-            _context.Entry(obstacle).State = EntityState.Modified;
+        //    if (obstacle == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ObstacleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    return Ok(obstacle);
+        //}
 
-            return NoContent();
-        }
+        //// PUT: api/Obstacle/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutObstacle([FromRoute] int id, [FromBody] Obstacle obstacle)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-        // POST: api/Obstacle
-        [HttpPost]
-        public async Task<IActionResult> PostObstacle([FromBody] Obstacle obstacle)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //    if (id != obstacle.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Obstacle.Add(obstacle);
-            await _context.SaveChangesAsync();
+        //    _context.Entry(obstacle).State = EntityState.Modified;
 
-            return CreatedAtAction("GetObstacle", new { id = obstacle.Id }, obstacle);
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ObstacleExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-        // DELETE: api/Obstacle/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteObstacle([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //    return NoContent();
+        //}
 
-            var obstacle = await _context.Obstacle.FindAsync(id);
-            if (obstacle == null)
-            {
-                return NotFound();
-            }
+        //// POST: api/Obstacle
+        //[HttpPost]
+        //public async Task<IActionResult> PostObstacle([FromBody] Obstacle obstacle)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            _context.Obstacle.Remove(obstacle);
-            await _context.SaveChangesAsync();
+        //    _context.Obstacle.Add(obstacle);
+        //    await _context.SaveChangesAsync();
 
-            return Ok(obstacle);
-        }
+        //    return CreatedAtAction("GetObstacle", new { id = obstacle.Id }, obstacle);
+        //}
 
-        private bool ObstacleExists(int id)
-        {
-            return _context.Obstacle.Any(e => e.Id == id);
-        }
+        //// DELETE: api/Obstacle/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteObstacle([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var obstacle = await _context.Obstacle.FindAsync(id);
+        //    if (obstacle == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Obstacle.Remove(obstacle);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(obstacle);
+        //}
+
+        //private bool ObstacleExists(int id)
+        //{
+        //    return _context.Obstacle.Any(e => e.Id == id);
+        //}
     }
 }

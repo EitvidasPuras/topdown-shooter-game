@@ -191,7 +191,7 @@
     <Compile Include="generatedFiles\Models\Factory\Obstacle.cs" />
     <Compile Include="generatedFiles\Models\Factory\ObstacleFactory.cs" />
     <Compile Include="generatedFiles\Models\Factory\Rectangle.cs" />
-    <Compile Include="generatedFiles\Models\MapGenerator.cs" />
+    <Compile Include="generatedFiles\Models\MapFacade.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\P250.cs" />
     <Compile Include="generatedFiles\Models\Observer\ObserverController.cs" />
     <Compile Include="generatedFiles\Models\Player.cs" />

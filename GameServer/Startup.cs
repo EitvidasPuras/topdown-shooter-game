@@ -31,11 +31,14 @@ namespace GameServer
             services.AddDbContext<PlayerContext>(opt => opt.UseInMemoryDatabase("PlayersList"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<WeaponContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("WeaponContext")));
+            services.AddDbContext<WeaponContext>(opt => opt.UseInMemoryDatabase("WeaponList"));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<ObstacleContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ObstacleContext")));
+            services.AddDbContext<ObstacleContext>(opt => opt.UseInMemoryDatabase("ObstacleList"));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<GameContext>(opt => opt.UseInMemoryDatabase("Game"));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

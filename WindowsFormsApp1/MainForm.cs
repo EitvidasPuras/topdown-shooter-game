@@ -31,7 +31,8 @@ namespace GameClient
         private async void Form1_LoadAsync(object sender, EventArgs e)
         {
             Console.WriteLine("0)\tGet all player");
-            requestController.client.BaseAddress = new Uri("https://topdown-shooter.azurewebsites.net/");
+            //requestController.client.BaseAddress = new Uri("https://topdown-shooter.azurewebsites.net/");
+            requestController.client.BaseAddress = new Uri("https://localhost:44371/");
             requestController.client.DefaultRequestHeaders.Accept.Clear();
             requestController.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestController.mediaType));
 

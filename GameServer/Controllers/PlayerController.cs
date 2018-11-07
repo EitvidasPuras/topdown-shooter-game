@@ -14,6 +14,8 @@ namespace GameServer.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly PlayerContext _context;
+   
+        private readonly GameContext _context2;
         public int Qty { get; set; } = 0;
 
         // GET: /<controller>/
@@ -25,12 +27,12 @@ namespace GameServer.Controllers
         public PlayerController(PlayerContext context)
         {
             _context = context;
-
+            
             if (_context.Players.Count() == 0)
             {
                 // Create a new Player if collection is empty,
                 // which means you can't delete all Players.
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     Qty++;
                     Player p = new Player { Name = "Player-" + Qty, Score = 0, PosX = 0, PosY = 0 };
