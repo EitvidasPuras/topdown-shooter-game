@@ -6,6 +6,7 @@ namespace GameServer
 {
 	namespace Models
 	{
+		public class MapFacade
 		{
 			ObstacleFactory obstacleFactory;
 			
