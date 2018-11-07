@@ -2,14 +2,12 @@
  * @(#) Circle.cs
  */
 
-namespace GameServer
+namespace GameServer.Models
 {
-	namespace Models
-	{
-		public class Circle : Obstacle
-		{
-		}
-		
-	}
-	
+    public class Circle : Obstacle
+    {
+        public Circle(int id, double PosX, double PosY, double Width, double Height) : base(id, PosX, PosY, Width, Height)
+        { }
+    }
+
 }

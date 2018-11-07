@@ -2,14 +2,12 @@
  * @(#) Rectangle.cs
  */
 
-namespace GameServer
+namespace GameServer.Models
 {
-	namespace Models
-	{
-		public class Rectangle : Obstacle
-		{
-		}
-		
-	}
-	
+    public class Rectangle : Obstacle
+    {
+        public Rectangle(int id, double PosX, double PosY, double Width, double Height) : base(id, PosX, PosY, Width, Height)
+        { }
+    }
+
 }

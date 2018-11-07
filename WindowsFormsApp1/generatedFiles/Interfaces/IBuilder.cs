@@ -15,6 +15,8 @@ namespace GameServer
 
             IBuilder addFireRate(double fireRate);
 
+            IBuilder addCordinates(double PosX, double PosY);
+
             GameServer.Models.Weapon buildWeapon();
 
         }

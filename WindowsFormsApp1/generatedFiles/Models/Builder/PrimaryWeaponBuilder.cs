@@ -18,6 +18,13 @@ namespace GameServer
                 return this;
             }
 
+            public Interfaces.IBuilder addCordinates(double PosX, double PosY)
+            {
+                w.PosX = PosX;
+                w.PosY = PosY;
+                return this;
+            }
+
             public Interfaces.IBuilder addDamage(int damage)
             {
                 w.Damage = damage;

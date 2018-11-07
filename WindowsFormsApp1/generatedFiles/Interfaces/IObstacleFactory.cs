@@ -2,16 +2,12 @@
  * @(#) IObstacleFactory.cs
  */
 
-namespace GameServer
+namespace GameServer.Interfaces
 {
-	namespace Interfaces
-	{
-		public interface IObstacleFactory
-		{
-			GameServer.Models.Obstacle createObstacle( String type );
-			
-		}
-		
-	}
-	
+    public interface IObstacleFactory
+    {
+        GameServer.Models.Obstacle createObstacle(int id, string type, string impType);
+
+    }
+
 }

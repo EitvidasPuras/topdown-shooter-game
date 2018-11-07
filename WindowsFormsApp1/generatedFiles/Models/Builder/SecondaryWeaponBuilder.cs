@@ -4,9 +4,9 @@
 
 namespace GameServer
 {
-	namespace Models
-	{
-		using Interfaces = GameServer.Interfaces;
+    namespace Models
+    {
+        using Interfaces = GameServer.Interfaces;
 
         public class SecondaryWeaponBuilder : Interfaces.IBuilder
         {
@@ -15,6 +15,13 @@ namespace GameServer
             public Interfaces.IBuilder addAmmo(int ammo)
             {
                 w.Ammo = ammo;
+                return this;
+            }
+
+            public Interfaces.IBuilder addCordinates(double PosX, double PosY)
+            {
+                w.PosX = PosX;
+                w.PosY = PosY;
                 return this;
             }
 
@@ -51,5 +58,5 @@ namespace GameServer
         }
 
     }
-	
+
 }

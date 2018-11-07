@@ -19,7 +19,11 @@ namespace GameServer
 
             public int Ammo { get; set; }
 
-            public Weapon(int id, string name, double fireRate, int damage, bool IsOnTheGround, int ammo) : base(null)
+            public double PosX { get; set; }
+
+            public double PosY { get; set; }
+
+            public Weapon(int id, string name, double fireRate, int damage, bool IsOnTheGround, int ammo, double PosX, double PosY) : base(null)
             {
                 this.Id = id;
                 this.Name = name;
@@ -27,6 +31,8 @@ namespace GameServer
                 this.Damage = damage;
                 this.isOnTheGround = IsOnTheGround;
                 this.Ammo = ammo;
+                this.PosX = PosX;
+                this.PosY = PosY;
             }
 
             public Weapon Clone()
