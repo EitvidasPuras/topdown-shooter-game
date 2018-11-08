@@ -29,10 +29,10 @@ namespace GameServer.Controllers
                 .ToList();
         }
 
-        [HttpGet("react")]
-        public ActionResult<string> react()
+        [HttpGet("{id}/react")]
+        public ActionResult<string> react([FromRoute] int id)
         {
-            return _context.Rectangles.Find(1).imp.react();
+            return _context.Obstacles.Find(id).imp.react();
         }
 
         //// GET: api/Obstacle/5

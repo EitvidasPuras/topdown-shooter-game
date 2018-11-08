@@ -1,5 +1,6 @@
 
 
+using System;
 using System.ComponentModel.DataAnnotations;
 /**
 * @(#) Obstacle.cs
@@ -25,6 +26,17 @@ namespace GameServer
             public Obstacle() { }
             public Obstacle(int id, double PosX, double PosY, double Width, double Height)
             {
+                Random random = new Random();
+                int number = random.Next(0, 10);
+                if (number % 2 == 0)
+                {
+                    imp = new DangerousImplementor();
+                }
+                else
+                {
+                    imp = new GoodImplementor();
+                }
+
                 this.Id = id;
                 this.PosX = PosX;
                 this.PosY = PosY;

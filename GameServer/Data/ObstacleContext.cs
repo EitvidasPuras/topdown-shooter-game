@@ -12,7 +12,8 @@ namespace GameServer.Models
             : base(options)
         {
         }
-        
+
+        public DbSet<GameServer.Models.Obstacle> Obstacles { get; set; }
         public DbSet<GameServer.Models.Circle> Circles { get; set; }
         public DbSet<GameServer.Models.Rectangle> Rectangles { get; set; }
     }
