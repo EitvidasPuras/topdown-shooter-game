@@ -22,15 +22,15 @@ namespace GameServer.Controllers
 
         // GET: api/Weapon
         [HttpGet]
-        public IEnumerable<Weapon> GetWeapons()
+        public ActionResult<IEnumerable<Weapon>> GetWeapons()
         {
-            //return _context.Weapons.ToList();
-            return _context.M4A1.ToList()
-                .Cast<Weapon>().Concat(_context.DesertEagle.ToList())
-                .Cast<Weapon>().Concat(_context.AK47.ToList())
-                .Cast<Weapon>().Concat(_context.P250.ToList())
-                .Cast<Weapon>().Concat(_context.GrenadeAdapter.ToList())
-                .ToList();
+            return _context.Weapons.ToList();
+            //return _context.M4A1.ToList()
+            //    .Cast<DesertEagle>().Concat(_context.DesertEagle.ToList())
+            //    .Cast<AK47>().Concat(_context.AK47.ToList())
+            //    .Cast<P250>().Concat(_context.P250.ToList())
+            //    .Cast<GrenadeAdapter>().Concat(_context.GrenadeAdapter.ToList())
+            //    .ToList();
         }
 
         //// GET: api/Weapon/5

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using GameServer.Models;
 namespace GameClient.Models
 {
     public class PlayerContext : DbContext

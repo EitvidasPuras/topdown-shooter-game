@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GameClient.Models;
+using GameServer.Models;
 
 namespace GameClient
 {
@@ -48,6 +49,37 @@ namespace GameClient
                 players = await response.Content.ReadAsAsync<ICollection<Player>>();
             }
             return players;
+        }
+
+        public async Task<ICollection<Weapon>> GetAllWeaponsAsync(string path)
+        {
+            ICollection<object> weps = null;
+            ICollection<Weapon> weapons = new List<Weapon>();
+            HttpResponseMessage response = await client.GetAsync(path + "api/weapon");
+            if (response.IsSuccessStatusCode)
+            {
+                weps = await response.Content.ReadAsAsync<ICollection<object>>();
+            }
+
+            foreach (object wep in weps)
+            {
+                Weapon weapon = null;
+                Newtonsoft.Json.Linq.JObject obj = JsonConvert.DeserializeObject<dynamic>(wep.ToString());
+                string name = obj.GetValue("name").ToString();
+
+                if (name.Contains("AK47"))
+                    weapon = JsonConvert.DeserializeObject<AK47>(wep.ToString());
+                else if (name.Contains("M4A1"))
+                    weapon = JsonConvert.DeserializeObject<M4A1>(wep.ToString());
+                else if(name.Contains("DesertEagle"))
+                    weapon = JsonConvert.DeserializeObject<DesertEagle>(wep.ToString());
+                else if(name.Contains("P250"))
+                    weapon = JsonConvert.DeserializeObject<P250>(wep.ToString());
+                else if(name.Contains("Grenade"))
+                    weapon = JsonConvert.DeserializeObject<GrenadeAdapter>(wep.ToString());
+                weapons.Add(weapon);
+            }
+            return weapons;
         }
 
         public async Task<Player> GetPlayerAsync(string path)

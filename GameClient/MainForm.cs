@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GameClient;
 using GameClient.Models;
+using GameServer.Models;
 
 namespace GameClient
 {
@@ -20,6 +21,7 @@ namespace GameClient
         Player myPlayer = new Player();
         String url1 = "";
         List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
+        List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
         public MainForm()
         {
@@ -32,7 +34,7 @@ namespace GameClient
         {
             Console.WriteLine("0)\tGet all player");
             //requestController.client.BaseAddress = new Uri("https://topdown-shooter.azurewebsites.net/");
-            requestController.client.BaseAddress = new Uri("https://localhost:44371/");
+            requestController.client.BaseAddress = new Uri("http://localhost:47850/");
             requestController.client.DefaultRequestHeaders.Accept.Clear();
             requestController.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestController.mediaType));
 
@@ -77,7 +79,7 @@ namespace GameClient
         private void Form1_PaintDot(int x, int y, Color color)
         {
             System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(color);
-            Rectangle rec = new Rectangle(x, y, 10, 10);
+            System.Drawing.Rectangle rec = new System.Drawing.Rectangle(x, y, 10, 10);
             formGraphics.FillRectangle(myBrush, rec);
             myBrush.Dispose();
 
@@ -97,6 +99,7 @@ namespace GameClient
         {
             this.Invalidate();
             ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+            ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
 
             Random rnd = new Random();
 
@@ -111,6 +114,11 @@ namespace GameClient
                 {
                     this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
                 }
+            }
+
+            foreach (Weapon w in weaponsList)
+            {
+                this.Form1_PaintDot((int)w.PosX, (int)w.PosY, Color.Yellow);
             }
         }
 

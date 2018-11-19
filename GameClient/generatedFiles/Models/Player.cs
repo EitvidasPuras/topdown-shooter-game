@@ -10,19 +10,14 @@ namespace GameServer
 	{
 		public class Player
 		{
-			private int Id;
+            public long Id { get; set; }
+            public string Name { get; set; }
+            public long Score { get; set; }
+            public long PosX { get; set; }
+            public long PosY { get; set; }
+            public int Health { get; set; }
 
-            String Name;
-			
-			int Score;
-			
-			double PosX;
-			
-			double PosY;
-			
-			int Health;
-			
-			Weapon PrimaryWeapon;
+            Weapon PrimaryWeapon;
 			
 			Weapon SecondaryWeapon;
 

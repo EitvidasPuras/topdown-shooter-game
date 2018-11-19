@@ -18,7 +18,7 @@ namespace GameServer.Controllers
         private readonly ObstacleContext _obstacleContext;
         private readonly WeaponContext _weaponContext;
         public int Qty { get; set; } = 0;
-        public int maxPlayers = 5;
+        public int maxPlayers = 3;
         //private bool mapIsBeingGenerated = false;
         //private bool mapGenerated = false;
         //private bool roomIsFull = false;
