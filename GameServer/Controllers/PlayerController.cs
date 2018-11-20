@@ -43,6 +43,26 @@ namespace GameServer.Controllers
             }
         }
 
+        [Route("updated/{id}")]
+        public ActionResult<bool> GetUpdated(long id)
+        {
+            Player p = _context.Players.Find(id);
+            if (p == null)
+            {
+                return false;
+            }
+            else
+            {
+                if (p.ChangedStatus)
+                {
+                    p.ChangedStatus = false;
+                    _context.Players.Update(p);
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
 
         // GET api/player
         [HttpGet]
@@ -108,6 +128,12 @@ namespace GameServer.Controllers
             {
                 player.PosX = request.PosX;
                 player.PosY = request.PosY;
+
+                foreach (Player contextplayer in _context.Players)
+                {
+                    contextplayer.ChangedStatus = true;
+                    _context.Players.Update(contextplayer);
+                }
 
                 _context.Players.Update(player);
                 _context.SaveChanges();

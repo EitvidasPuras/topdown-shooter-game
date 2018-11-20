@@ -23,6 +23,7 @@ namespace GameClient
         List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
         List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
+        ObserverController observer = new ObserverController();
         public MainForm()
         {
             InitializeComponent();
@@ -44,6 +45,7 @@ namespace GameClient
 
             foreach (Player p in playersList)
             {
+                listOfPlayers.Add(p);
                 //Coordinates coordinates = new Coordinates
                 //{
                 //    Id = p.Id,
@@ -72,7 +74,7 @@ namespace GameClient
             this.Form1_PaintDot((int)myPlayer.PosX, (int)myPlayer.PosY, Color.Blue);
 
             playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
-
+            timer1.Enabled = true;
         }
 
         // paint dot
@@ -97,28 +99,37 @@ namespace GameClient
         //timeris getina visus playerius ir atvaizduoja pagal koordinates
         private async void timer1_TickAsync(object sender, EventArgs e)
         {
-            this.Invalidate();
-            ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
-            ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
-
-            Random rnd = new Random();
-
-            foreach (Player p in playersList)
+            bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
+            if (updated)
             {
+                //this.Invalidate();
+                ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+                ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
 
-                if (p.Id == myPlayer.Id)
+                foreach (Player p in playersList)
                 {
-                    this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Blue);
+                    Player oldPlayer = listOfPlayers.Find(i => i.Id == p.Id);
+                    if (oldPlayer != null)
+                    {
+                        if (!oldPlayer.checkEquality(p))
+                        {
+                            if (p.Id == myPlayer.Id)
+                            {
+                                this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Blue);
+                            }
+                            else
+                            {
+                                this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
+                            }
+                        }
+                    }
+                    
                 }
-                else
-                {
-                    this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
-                }
-            }
 
-            foreach (Weapon w in weaponsList)
-            {
-                this.Form1_PaintDot((int)w.PosX, (int)w.PosY, Color.Yellow);
+                foreach (Weapon w in weaponsList)
+                {
+                    this.Form1_PaintDot((int)w.PosX, (int)w.PosY, Color.Yellow);
+                }
             }
         }
 
