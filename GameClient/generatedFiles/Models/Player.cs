@@ -63,11 +63,11 @@ namespace GameServer
 			
 			public bool checkEquality(Player newData)
 			{
-                if (this.PosX != newData.PosX)
+                if (this.PosX != newData.PosX || this.PosY != newData.PosY)
                 {
-                    return true;
+                    return false;
                 }
-                return false;
+                return true;
                 //TODO: add more equality checks
             }
 			

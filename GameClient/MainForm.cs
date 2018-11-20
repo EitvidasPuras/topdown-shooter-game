@@ -75,6 +75,7 @@ namespace GameClient
 
             url1 = url.PathAndQuery;
             myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
+            listOfPlayers.Add(myPlayer);
 
             this.Form1_PaintPlayer((int)myPlayer.PosX, (int)myPlayer.PosY);
 
@@ -130,19 +131,9 @@ namespace GameClient
         //timeris getina visus playerius ir atvaizduoja pagal koordinates
         private async void timer1_TickAsync(object sender, EventArgs e)
         {
-<<<<<<< Updated upstream
+
             bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
             if (updated)
-=======
-            this.Invalidate();
-            ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
-            ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
-
-            Random rnd = new Random();
-            PaintEventArgs paintEventArgs = null;
-
-            foreach (Player p in playersList)
->>>>>>> Stashed changes
             {
                 //this.Invalidate();
                 ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
@@ -150,7 +141,6 @@ namespace GameClient
 
                 foreach (Player p in playersList)
                 {
-<<<<<<< Updated upstream
                     Player oldPlayer = listOfPlayers.Find(i => i.Id == p.Id);
                     if (oldPlayer != null)
                     {
@@ -158,36 +148,31 @@ namespace GameClient
                         {
                             if (p.Id == myPlayer.Id)
                             {
-                                this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Blue);
+                                Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
+                                formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
+
+                                this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
                             }
                             else
                             {
-                                this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
+                                Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
+                                formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
+
+                                this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
                             }
-                        }
+
+                            int index = listOfPlayers.FindIndex(i => i.Id == p.Id);
+                            listOfPlayers[index] = p;
+                        }                        
                     }
-                    
-=======
-                    this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
->>>>>>> Stashed changes
                 }
+
 
                 foreach (Weapon w in weaponsList)
                 {
-<<<<<<< Updated upstream
-                    this.Form1_PaintDot((int)w.PosX, (int)w.PosY, Color.Yellow);
+                    this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
                 }
             }
-=======
-                    this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
-                }
-            }
-
-            foreach (Weapon w in weaponsList)
-            {
-                this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
-            }
->>>>>>> Stashed changes
         }
 
         //reaguoja į paspaustus mygtukus
