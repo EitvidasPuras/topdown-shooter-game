@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GameClient;
 using GameClient.Models;
 using GameServer.Models;
+using System.IO;
 
 namespace GameClient
 {
@@ -28,6 +29,9 @@ namespace GameClient
         {
             InitializeComponent();
             formGraphics = this.CreateGraphics();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
         }
 
         // pagetina visus playerius ir juos atvaizduoja, vėliau sukuria playeri esančiam klientui
@@ -42,7 +46,8 @@ namespace GameClient
             ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
 
             Random rnd = new Random();
-
+            
+    
             foreach (Player p in playersList)
             {
                 listOfPlayers.Add(p);
@@ -53,7 +58,7 @@ namespace GameClient
                 //    PosY = rnd.Next(10, this.Height)
                 //};
                 //var patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
-                this.Form1_PaintDot((int)p.PosX, (int)p.PosY, Color.Red);
+                this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
             }
 
             // Create a new player
@@ -71,20 +76,46 @@ namespace GameClient
             url1 = url.PathAndQuery;
             myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
 
-            this.Form1_PaintDot((int)myPlayer.PosX, (int)myPlayer.PosY, Color.Blue);
+            this.Form1_PaintPlayer((int)myPlayer.PosX, (int)myPlayer.PosY);
 
             playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
             timer1.Enabled = true;
         }
 
         // paint dot
-        private void Form1_PaintDot(int x, int y, Color color)
+        private void Form1_PaintPlayer(int x, int y)
         {
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(color);
-            System.Drawing.Rectangle rec = new System.Drawing.Rectangle(x, y, 10, 10);
-            formGraphics.FillRectangle(myBrush, rec);
-            myBrush.Dispose();
+            Image image = Image.FromFile(@"..\\..\\assets\\person.png");
+            formGraphics.DrawImage(image, x, y);
+        }
 
+        private void Form1_PaintWeapons(int x, int y, string weaponName)
+        {
+            if (weaponName.Contains("AK47"))
+            {
+                Image image = Image.FromFile(@"..\\..\\assets\\ak47.png");
+                formGraphics.DrawImage(image, x, y);
+            }
+            else if (weaponName.Contains("M4A1"))
+            {
+                Image image = Image.FromFile(@"..\\..\\assets\\m4a1.png");
+                formGraphics.DrawImage(image, x, y);
+            }
+            else if (weaponName.Contains("DesertEagle"))
+            {
+                Image image = Image.FromFile(@"..\\..\\assets\\deserteagle.png");
+                formGraphics.DrawImage(image, x, y);
+            }
+            else if (weaponName.Contains("P250"))
+            {
+                Image image = Image.FromFile(@"..\\..\\assets\\p250.png");
+                formGraphics.DrawImage(image, x, y);
+            }
+            else if (weaponName.Contains("Grenade"))
+            {
+                Image image = Image.FromFile(@"..\\..\\assets\\grenade.png");
+                formGraphics.DrawImage(image, x, y);
+            }
         }
 
         //deletint playeri?
@@ -99,8 +130,19 @@ namespace GameClient
         //timeris getina visus playerius ir atvaizduoja pagal koordinates
         private async void timer1_TickAsync(object sender, EventArgs e)
         {
+<<<<<<< Updated upstream
             bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
             if (updated)
+=======
+            this.Invalidate();
+            ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+            ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
+
+            Random rnd = new Random();
+            PaintEventArgs paintEventArgs = null;
+
+            foreach (Player p in playersList)
+>>>>>>> Stashed changes
             {
                 //this.Invalidate();
                 ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
@@ -108,6 +150,7 @@ namespace GameClient
 
                 foreach (Player p in playersList)
                 {
+<<<<<<< Updated upstream
                     Player oldPlayer = listOfPlayers.Find(i => i.Id == p.Id);
                     if (oldPlayer != null)
                     {
@@ -124,13 +167,27 @@ namespace GameClient
                         }
                     }
                     
+=======
+                    this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
+>>>>>>> Stashed changes
                 }
 
                 foreach (Weapon w in weaponsList)
                 {
+<<<<<<< Updated upstream
                     this.Form1_PaintDot((int)w.PosX, (int)w.PosY, Color.Yellow);
                 }
             }
+=======
+                    this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
+                }
+            }
+
+            foreach (Weapon w in weaponsList)
+            {
+                this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
+            }
+>>>>>>> Stashed changes
         }
 
         //reaguoja į paspaustus mygtukus
