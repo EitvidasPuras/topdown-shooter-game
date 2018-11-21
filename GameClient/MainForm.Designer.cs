@@ -50,6 +50,8 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_LoadAsync);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPressAsync);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.ResumeLayout(false);
 
         }

@@ -212,5 +212,17 @@ namespace GameClient
                     break;
             }
         }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            Pen pen = new Pen(Color.Azure);
+            formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Pen pen = new Pen(Color.Black);
+            formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
+        }
     }
 }
