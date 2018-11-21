@@ -86,7 +86,7 @@ namespace GameClient
         // paint dot
         private void Form1_PaintPlayer(int x, int y)
         {
-            Image image = Image.FromFile(@"..\\..\\assets\\person.png");
+            Image image = Image.FromFile(@"..\\..\\assets\\basicPlayer.png");
             formGraphics.DrawImage(image, x, y);
         }
 
