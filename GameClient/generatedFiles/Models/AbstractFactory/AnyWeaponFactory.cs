@@ -8,7 +8,7 @@ namespace GameServer
 	{
 		public class AnyWeaponFactory : AbstractWeaponFactory
 		{
-			BuilderDirector director;
+			BuilderDirector director  = new BuilderDirector();
 			
 			public override Weapon createWeapon(int id, string family, string type )
 			{

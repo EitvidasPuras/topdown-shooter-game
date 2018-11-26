@@ -16,7 +16,7 @@ namespace GameServer.Models
 
         public double Height { get; set; }
 
-        public Implementor imp = null;
+        public Implementor imp {get;set;}
 
         public Obstacle(int id, double PosX, double PosY, double Width, double Height)
         {
@@ -30,6 +30,11 @@ namespace GameServer.Models
         public void setImplementor(Implementor imp)
         {
             this.imp = imp;
+        }
+
+        public Implementor getImplementor()
+        {
+            return this.imp;
         }
     }
 
