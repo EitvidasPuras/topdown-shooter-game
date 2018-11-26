@@ -9,42 +9,58 @@ using System.Threading.Tasks;
 namespace GameServer.Models.Tests
 {
     [TestClass()]
-    public class WeaponFactoryTest
+    public class PlayerTests
     {
         [TestMethod()]
-        public void createWeaponTest_AK47()
+        public void checkEqualityTest()
         {
+            Player player = new Player
+            {
+                Name = "Studentas1",
+                Score = 100,
+                PosX = 50,
+                PosY = 50
+            };
+
+            Player player2 = new Player
+            {
+                Name = "Studentas2",
+                Score = 100,
+                PosX = 50,
+                PosY = 50
+            };
+
+            player.move("up");
+            Assert.IsFalse(player.checkEquality(player2));
+            Assert.IsTrue(player2.checkEquality(player2));
+        }
+
+        [TestMethod()]
+        public void checkShootTest()
+        {
+            Player player = new Player
+            {
+                Name = "Studentas1",
+                Score = 100,
+                PosX = 50,
+                PosY = 50
+            };
+
+            Player player2 = new Player
+            {
+                Name = "Studentas2",
+                Score = 100,
+                PosX = 300,
+                PosY = 300
+            };
             AnyWeaponFactory factory = new AnyWeaponFactory();
             Weapon weapon = factory.createWeapon(1, "P", "AK47");
-            Assert.IsInstanceOfType(weapon, typeof(AK47));
-        }
-        [TestMethod()]
-        public void createWeaponTest_M4A1()
-        {
-            AnyWeaponFactory factory = new AnyWeaponFactory();
-            Weapon weapon = factory.createWeapon(1, "P", "M4A1");
-            Assert.IsInstanceOfType(weapon, typeof(M4A1));
-        }
-        [TestMethod()]
-        public void createWeaponTest_P250()
-        {
-            AnyWeaponFactory factory = new AnyWeaponFactory();
-            Weapon weapon = factory.createWeapon(1, "S", "DesertEagle");
-            Assert.IsInstanceOfType(weapon, typeof(DesertEagle));
-        }
-        [TestMethod()]
-        public void createWeaponTest_DesertEagle()
-        {
-            AnyWeaponFactory factory = new AnyWeaponFactory();
-            Weapon weapon = factory.createWeapon(1, "S", "P250");
-            Assert.IsInstanceOfType(weapon, typeof(P250));
-        }
-        [TestMethod()]
-        public void createWeaponTest_Grenade()
-        {
-            AnyWeaponFactory factory = new AnyWeaponFactory();
-            Weapon weapon = factory.createWeapon(1, "G", "Grenade");
-            Assert.IsInstanceOfType(weapon, typeof(GrenadeAdapter));
+
+            player.pickupPrimary(weapon);
+            player.equipPrimary();
+
+            Assert.IsTrue(player.shoot(300, 300, player2));
+            Assert.IsFalse(player.shoot(0, 0, player2));
         }
     }
 }

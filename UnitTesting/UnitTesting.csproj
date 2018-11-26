@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="FactoryTests\WeaponFactoryTests.cs" />
     <Compile Include="FactoryTests\ObstacleFactoryTests.cs" />
-    <Compile Include="generatedFiles\Models\PlayerTests.cs" />
     <Compile Include="PlayerTests\PlayerTests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +68,7 @@
       <Name>GameClient</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
