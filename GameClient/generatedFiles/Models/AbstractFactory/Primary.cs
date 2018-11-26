@@ -16,22 +16,29 @@ namespace GameServer
             {
                 List<int> posx = new List<int>();
                 List<int> posy = new List<int>();
-                for (int i = 0; i < 1000; i++)
+                while(px != x && py != y)
                 { 
                     if (x - px > 0)
                     {
                         posx.Add(px + 1);
                         px++;
+                    }else if(x - px == 0)
+                    {
+                        posx.Add(px);
                     }
                     else
                     {
                         posx.Add(px - 1);
                         px--;
                     }
+
                     if (y - py > 0)
                     {
                         posy.Add(py + 1);
                         py++;
+                    }else if(y - py == 0)
+                    {
+                        posy.Add(py);
                     }
                     else
                     {
