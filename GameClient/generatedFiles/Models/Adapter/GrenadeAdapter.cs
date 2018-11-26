@@ -12,9 +12,9 @@ namespace GameServer.Models
             this.grenade = grenade;
         }
 
-        public override void shoot()
+        public override bool shoot(int x, int y, int px, int py, Player player)
         {
-            this.grenade.throwGrenade();
+            return this.grenade.throwGrenade(x, y, px, py, player);
         }
 
     }

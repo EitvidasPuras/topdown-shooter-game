@@ -6,9 +6,9 @@ namespace GameServer.Models
 {
 	public class Grenade
 	{
-		public void throwGrenade(  )
+		public bool throwGrenade(int x, int y, int px, int py, Player player)
 		{
-			
+            return false;
 		}
 		
 	}

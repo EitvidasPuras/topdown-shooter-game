@@ -1,7 +1,7 @@
 /**
  * @(#) Primary.cs
  */
-
+using System.Collections.Generic;
 namespace GameServer
 {
     namespace Models
@@ -12,9 +12,45 @@ namespace GameServer
             {
             }
 
-            public override void shoot()
+            public override bool shoot(int x, int y, int px, int py, Player player)
             {
-                throw new System.NotImplementedException();
+                List<int> posx = new List<int>();
+                List<int> posy = new List<int>();
+                for (int i = 0; i < 1000; i++)
+                { 
+                    if (x - px > 0)
+                    {
+                        posx.Add(px + 1);
+                        px++;
+                    }
+                    else
+                    {
+                        posx.Add(px - 1);
+                        px--;
+                    }
+                    if (y - py > 0)
+                    {
+                        posy.Add(py + 1);
+                        py++;
+                    }
+                    else
+                    {
+                        posy.Add(py - 1);
+                        py--;
+                    }
+                }
+                for (int i = 0; i < posx.Count; i++)
+                {
+                    if (player.PosX - 12 < posx[i] && posx[i] < player.PosX + 12)
+                    {
+                        if (player.PosY - 12 < posy[i] && posy[i] < player.PosY + 12)
+                        {
+                            return true;
+                        }
+                    }
+                    i++;
+                }
+                return false;
             }
         }
 

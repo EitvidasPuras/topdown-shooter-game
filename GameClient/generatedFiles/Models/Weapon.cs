@@ -53,7 +53,7 @@ namespace GameServer
 
             }
 
-            public abstract void shoot();
+            public abstract bool shoot(int x, int y, int px, int py, Player player);
 
         }
 

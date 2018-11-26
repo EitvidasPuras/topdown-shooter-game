@@ -71,6 +71,29 @@ namespace GameServer
                 //TODO: add more equality checks
             }
 			
+            public void move(string Direction)
+            {
+                switch (Direction)
+                {
+                    case "up":
+                        PosY -= 15;
+                        break;
+                    case "left":
+                        PosX -= 15;
+                        break;
+                    case "down":
+                        PosY += 15;
+                        break;
+                    case "right":
+                        PosX += 15;
+                        break;
+                }
+            }
+
+            public bool shoot(int x, int y, Player player)
+            {
+                return EquippedWeapon.shoot(x, y, (int)this.PosX, (int)this.PosY, player);
+            }
 		}
 		
 	}

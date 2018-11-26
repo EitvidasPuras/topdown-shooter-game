@@ -12,9 +12,9 @@ namespace GameServer
             {
             }
 
-            public override void shoot()
+            public override bool shoot(int x, int y, int px, int py, Player player)
             {
-                throw new System.NotImplementedException();
+                return false;
             }
         }
 

@@ -52,7 +52,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FactoryTests\WeaponFactoryTests.cs" />
     <Compile Include="FactoryTests\ObstacleFactoryTests.cs" />
+    <Compile Include="generatedFiles\Models\PlayerTests.cs" />
+    <Compile Include="PlayerTests\PlayerTests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

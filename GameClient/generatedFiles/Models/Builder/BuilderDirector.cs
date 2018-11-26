@@ -13,11 +13,13 @@ namespace GameServer
         {
             GameServer.Interfaces.IBuilder builder;
             Random random = new Random();
+            public int MaxWidth = 800;
+            public int MaxHeight = 600;
             public Weapon getWeapon(int id, string family, string type)
             {
                 Weapon w = null;
-                double PosX = random.Next(10, MainForm.ActiveForm.Width - 10);
-                double PosY = random.Next(10, MainForm.ActiveForm.Height - 10);
+                double PosX = random.Next(10, MaxWidth - 10);
+                double PosY = random.Next(10, MaxHeight - 10);
                 if (family.Equals("P"))
                 {
                     builder = new PrimaryWeaponBuilder();
@@ -28,7 +30,7 @@ namespace GameServer
                         //w = new M4A1(id, "M4A1", 55, 60, true, 50);
                         return builder.startNew(id, "M4A1").addAmmo(60).addDamage(40).addFireRate(69).addCordinates(PosX, PosY).buildWeapon();
                     }
-                    else if (type.Equals("Ak47"))
+                    else if (type.Equals("AK47"))
                     {
                         //w = new AK47(id, "AK47", 60, 70, true, 50);
                         return builder.startNew(id, "AK47").addAmmo(30).addDamage(60).addFireRate(60).addCordinates(PosX, PosY).buildWeapon();

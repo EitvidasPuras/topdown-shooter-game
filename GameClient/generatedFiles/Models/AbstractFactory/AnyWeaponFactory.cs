@@ -22,7 +22,7 @@ namespace GameServer
                         //w = new M4A1(id, "M4A1", 55, 60, true, 50);
                     }
                     else
-                    if (type.Equals("Ak47"))
+                    if (type.Equals("AK47"))
                     {
                         w = director.getWeapon(id, family, type);
                         //w = new AK47(id, "AK47", 60, 70, true, 50);
