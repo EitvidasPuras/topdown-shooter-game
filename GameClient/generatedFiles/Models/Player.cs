@@ -42,6 +42,13 @@ namespace GameServer
                     EquippedWeapon = SecondaryWeapon;
                 }
             }
+            public void equipGrenade()
+			{
+                if (Grenade != null)
+                {
+                    EquippedWeapon = Grenade;
+                }
+            }
 			
 			public void pickupPrimary(Weapon gun)
 			{
@@ -57,6 +64,15 @@ namespace GameServer
                 if (SecondaryWeapon == null)
                 {
                     SecondaryWeapon = gun;
+                    gun.equip();
+                }
+            }
+
+            public void pickupGrenade(Weapon gun)
+			{
+                if (Grenade == null)
+                {
+                    Grenade = gun;
                     gun.equip();
                 }
             }
