@@ -54,8 +54,9 @@
   <ItemGroup>
     <Compile Include="FactoryTests\WeaponFactoryTests.cs" />
     <Compile Include="FactoryTests\ObstacleFactoryTests.cs" />
+    <Compile Include="ImplementorTests\ImplementorTests.cs" />
+    <Compile Include="WeaponsTests\WeaponTests.cs" />
     <Compile Include="PlayerTests\PlayerTests.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
