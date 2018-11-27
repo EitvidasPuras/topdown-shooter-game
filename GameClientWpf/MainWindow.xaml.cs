@@ -25,64 +25,10 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int moveRightDist = 0;
-        private int moveDownDist = 0;
-
         public MainWindow()
         {
             InitializeComponent();
         }
-
-        private void MoveRight(object sender, RoutedEventArgs e)
-        {
-
-            this.moveRightDist++;
-            this.moveDownDist++;
-            crosshair.RenderTransform = new TranslateTransform(this.moveRightDist, this.moveDownDist);
-
-        }
-
-        private void LayoutRoot_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void Grid_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        //private void Window_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    switch (e.Key)
-        //    {
-        //        case Key.W:
-        //            moveDownDist -= 15;
-
-        //            break;
-        //        case Key.A:
-        //            moveRightDist -= 15;
-
-        //            break;
-        //        case Key.S:
-        //            moveDownDist += 15;
-
-        //            break;
-        //        case Key.D:
-        //            moveRightDist += 15;
-
-        //            break;
-        //            //case 'x':
-        //            //    var statusCode = await requestController.DeletePlayerAsync(myPlayer.Id);
-        //            //    this.Close();
-        //    }
-        //    //crosshair2.RenderTransform = new TranslateTransform(this.moveRightDist, this.moveDownDist);
-        //    image.RenderTransform = new TranslateTransform(this.moveRightDist, this.moveDownDist);
-        //}
-
-
-        //private System.Drawing.Graphics formGraphics;
-        //private System.Drawing.Graphics formGraphics2;
 
         RequestsController requestController = new RequestsController();
         Player myPlayer = new Player();
@@ -90,10 +36,14 @@ namespace WpfApp1
         List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
         List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
+
+        Dictionary<long, Image> UIPlayers = new Dictionary<long, Image>();
+        Dictionary<long, Image> UIWeapons = new Dictionary<long, Image>();
+
         ObserverController observer = new ObserverController();
 
         // pagetina visus playerius ir juos atvaizduoja, vėliau sukuria playeri esančiam klientui
-        private async void Form1_LoadAsync(object sender, EventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("0)\tGet all player");
             //requestController.client.BaseAddress = new Uri("https://topdown-shooter.azurewebsites.net/");
@@ -102,6 +52,12 @@ namespace WpfApp1
             requestController.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestController.mediaType));
 
             ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+            ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
+
+            foreach (Weapon w in weaponsList)
+            {
+                this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
+            }
 
             Random rnd = new Random();
 
@@ -116,7 +72,7 @@ namespace WpfApp1
                 //    PosY = rnd.Next(10, this.Height)
                 //};
                 //var patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
-                this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
+                this.Form1_PaintPlayer(p);
             }
 
             // Create a new player
@@ -135,24 +91,37 @@ namespace WpfApp1
             myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
             listOfPlayers.Add(myPlayer);
 
-            this.Form1_PaintPlayer((int)myPlayer.PosX, (int)myPlayer.PosY);
+            this.Form1_PaintPlayer(myPlayer);
 
             playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += timer1_TickAsync;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             dispatcherTimer.Start();
-
-            //timer1.Enabled = true;
         }
 
         // paint dot
-        private void Form1_PaintPlayer(int x, int y)
+        private void Form1_PaintPlayer(Player player)//int x, int y)
         {
             //Image image = Image.FromFile(@"..\\..\\assets\\basicPlayer.png");
             //formGraphics.DrawImage(image, x, y);
             //formGraphics.DrawImage()
+            Image img;
+            if (UIPlayers.TryGetValue(player.Id, out img))
+            {
+                Player oldPlayer = listOfPlayers.Find(i => i.Id == player.Id);
+                img.RenderTransform = new TranslateTransform(player.PosX, player.PosY);
+            }
+            else
+            {
+                img = new Image();
+                LayoutRoot.Children.Add(img);
+                img.Source = new BitmapImage(new Uri("/images/basicPlayer.png", UriKind.Relative)); 
+                img.Margin = new Thickness(player.PosX, player.PosY, 0, 0);
+                img.Height = 50; 
+                UIPlayers.Add(player.Id, img);         
+            }
         }
 
         private void Form1_PaintWeapons(int x, int y, string weaponName)
@@ -161,26 +130,51 @@ namespace WpfApp1
             {
                 //Image image = Image.FromFile(@"..\\..\\assets\\ak47.png");
                 //formGraphics.DrawImage(image, x, y);
+                Image img = new Image();
+                LayoutRoot.Children.Add(img);
+                img.Source = new BitmapImage(new Uri("/images/ak47.png", UriKind.Relative));
+                img.Margin = new Thickness(x, y, 0, 0);
+                img.Height = 15;
             }
             else if (weaponName.Contains("M4A1"))
             {
                 //Image image = Image.FromFile(@"..\\..\\assets\\m4a1.png");
                 //formGraphics.DrawImage(image, x, y);
+                Image img = new Image();
+                LayoutRoot.Children.Add(img);
+                img.Source = new BitmapImage(new Uri("/images/m4a1.png", UriKind.Relative));
+                img.Margin = new Thickness(x, y, 0, 0);
+                img.Height = 15;
             }
             else if (weaponName.Contains("DesertEagle"))
             {
                 //Image image = Image.FromFile(@"..\\..\\assets\\deserteagle.png");
                 //formGraphics.DrawImage(image, x, y);
+                Image img = new Image();
+                LayoutRoot.Children.Add(img);
+                img.Source = new BitmapImage(new Uri("/images/deserteagle.png", UriKind.Relative));
+                img.Margin = new Thickness(x, y, 0, 0);
+                img.Height = 15;
             }
             else if (weaponName.Contains("P250"))
             {
                 //Image image = Image.FromFile(@"..\\..\\assets\\p250.png");
                 //formGraphics.DrawImage(image, x, y);
+                Image img = new Image();
+                LayoutRoot.Children.Add(img);
+                img.Source = new BitmapImage(new Uri("/images/p250.png", UriKind.Relative));
+                img.Margin = new Thickness(x, y, 0, 0);
+                img.Height = 15;
             }
             else if (weaponName.Contains("Grenade"))
             {
                 //Image image = Image.FromFile(@"..\\..\\assets\\grenade.png");
                 //formGraphics.DrawImage(image, x, y);
+                Image img = new Image();
+                LayoutRoot.Children.Add(img);
+                img.Source = new BitmapImage(new Uri("/images/grenade.png", UriKind.Relative));
+                img.Margin = new Thickness(x, y, 0, 0);
+                img.Height = 15;
             }
         }
 
@@ -216,14 +210,14 @@ namespace WpfApp1
                                 //Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
                                 //formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
 
-                                this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
+                                this.Form1_PaintPlayer(p);
                             }
                             else
                             {
                                 //Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
                                 //formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
 
-                                this.Form1_PaintPlayer((int)p.PosX, (int)p.PosY);
+                                this.Form1_PaintPlayer(p);
                             }
 
                             int index = listOfPlayers.FindIndex(i => i.Id == p.Id);

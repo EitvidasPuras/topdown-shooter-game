@@ -5,43 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" KeyDown="Window_KeyDown">
-    <Grid KeyDown="Grid_KeyDown">
-        <Grid x:Name="LayoutRoot" KeyDown="LayoutRoot_KeyDown">
+        Title="MainWindow" Height="450" Width="800" KeyDown="Window_KeyDown" Loaded="Window_Loaded">
+    <Grid>
+        <Grid x:Name="LayoutRoot">
 
             <Grid.Background>
                 <ImageBrush ImageSource="/images/grasss.jpg" Stretch="UniformToFill"/>
             </Grid.Background>
-
-            <Line x:Name="crosshair"
-          HorizontalAlignment="Left"
-          VerticalAlignment="Top"
-          Stroke="Red"
-          X1="0"
-          X2="0"
-          Y1="10"
-          Y2="0" StrokeThickness="5" />
-
-            <Line x:Name="crosshair2"
-          HorizontalAlignment="Left"
-          VerticalAlignment="Top"
-          Stroke="#FFE0A015"
-          X1="0"
-          X2="0"
-          Y1="10"
-          Y2="0" StrokeThickness="5" />
-
-
-            <Image x:Name ="image" HorizontalAlignment="Left" Height="100" Margin="93,97,0,0" VerticalAlignment="Top" Width="100">
-                <Image.Source>
-                    <BitmapImage DecodePixelWidth="300" UriSource="/images/basicPlayer.png" />
-                </Image.Source>
-            </Image>
-            <Image x:Name ="image_Copy" HorizontalAlignment="Left" Height="100" Margin="273,97,0,0" VerticalAlignment="Top" Width="100">
-                <Image.Source>
-                    <BitmapImage DecodePixelWidth="300" UriSource="/images/basicPlayer.png" />
-                </Image.Source>
-            </Image>
 
         </Grid>
     </Grid>
