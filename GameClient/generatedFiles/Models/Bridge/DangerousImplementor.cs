@@ -8,9 +8,9 @@ namespace GameServer.Models
 {
 	public class DangerousImplementor : Implementor
 	{
-		public override void react(  )
+		public override void react(Player player)
 		{
-            Console.WriteLine("If a player touches this obstacle he explodes");
+            player.Health = player.Health - 10;
 		}
 		
 	}

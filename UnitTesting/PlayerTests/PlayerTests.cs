@@ -12,7 +12,7 @@ namespace GameServer.Models.Tests
     public class PlayerTests
     {
         [TestMethod()]
-        public void checkEqualityTest()
+        public void PlayerMoveUpTest()
         {
             Player player = new Player
             {
@@ -22,17 +22,53 @@ namespace GameServer.Models.Tests
                 PosY = 50
             };
 
-            Player player2 = new Player
+            player.move("up");
+            Assert.IsTrue(player.PosY != 50 && player.PosX == 50);
+        }
+
+        [TestMethod()]
+        public void PlayerMoveDownTest()
+        {
+            Player player = new Player
             {
-                Name = "Studentas2",
+                Name = "Studentas1",
                 Score = 100,
                 PosX = 50,
                 PosY = 50
             };
 
-            player.move("up");
-            Assert.IsFalse(player.checkEquality(player2));
-            Assert.IsTrue(player2.checkEquality(player2));
+            player.move("down");
+            Assert.IsTrue(player.PosY != 50 && player.PosX == 50);
+        }
+
+        [TestMethod()]
+        public void PlayerMoveLeftTest()
+        {
+            Player player = new Player
+            {
+                Name = "Studentas1",
+                Score = 100,
+                PosX = 50,
+                PosY = 50
+            };
+
+            player.move("left");
+            Assert.IsTrue(player.PosY == 50 && player.PosX != 50);
+        }
+
+        [TestMethod()]
+        public void PlayerMoveRightTest()
+        {
+            Player player = new Player
+            {
+                Name = "Studentas1",
+                Score = 100,
+                PosX = 50,
+                PosY = 50
+            };
+
+            player.move("right");
+            Assert.IsTrue(player.PosY == 50 && player.PosX != 50);
         }
 
         [TestMethod()]
