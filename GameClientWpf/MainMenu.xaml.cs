@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,22 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using GameClient;
-using GameClient.Models;
-using GameClientWpf;
-using GameServer.Models;
 
 namespace WpfApp1
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainMenu.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainMenu : UserControl
     {
-        public MainWindow()
+        public MainMenu()
         {
             InitializeComponent();
-            this.Content = new MainMenu();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+           Application.Current.MainWindow.Content = new GameplayWindow();
         }
     }
 }
