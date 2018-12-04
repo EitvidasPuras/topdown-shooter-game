@@ -1,5 +1,6 @@
 
 
+using GameClient.generatedFiles.Models;
 using System;
 /**
 * @(#) Player.cs
@@ -8,7 +9,7 @@ namespace GameServer
 {
 	namespace Models
 	{
-		public class Player
+		public class Player : PlayerTemplate
 		{
             public long Id { get; set; }
             public string Name { get; set; }
@@ -22,7 +23,7 @@ namespace GameServer
             Weapon PrimaryWeapon;
 			
 			Weapon SecondaryWeapon;
-
+            
             Weapon Grenade;
 			
 			Weapon EquippedWeapon;
@@ -112,7 +113,17 @@ namespace GameServer
             {
                 return EquippedWeapon.shoot(x, y, (int)this.PosX, (int)this.PosY, player);
             }
-		}
+
+            public override bool CheckIfHost()
+            {
+                return this.IsHost;
+            }
+
+            public override bool CheckIfReady()
+            {
+                return this.IsReady;
+            }
+        }
 		
 	}
 	

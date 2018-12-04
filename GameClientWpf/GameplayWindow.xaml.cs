@@ -28,14 +28,16 @@ namespace WpfApp1
     /// </summary>
     public partial class GameplayWindow : UserControl
     {
-        public GameplayWindow()
+        Player myPlayer;
+        RequestsController requestController = new RequestsController();
+        public GameplayWindow(Player myPlayer, string url)
         {
             InitializeComponent();
+            this.myPlayer = myPlayer;
+            url1 = url;
         }
 
-        RequestsController requestController = new RequestsController();
-        Player myPlayer = new Player();
-        String url1 = "";
+        string url1 = "";
         List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
         List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
@@ -49,10 +51,6 @@ namespace WpfApp1
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("0)\tGet all player");
-            //requestController.client.BaseAddress = new Uri("https://topdown-shooter.azurewebsites.net/");
-            requestController.client.BaseAddress = new Uri("http://localhost:47850/");
-            requestController.client.DefaultRequestHeaders.Accept.Clear();
-            requestController.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestController.mediaType));
 
             ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
             ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
@@ -78,20 +76,6 @@ namespace WpfApp1
                 this.Form1_PaintPlayer(p);
             }
 
-            // Create a new player
-            Console.WriteLine("1.1)\tCreate the player");
-            myPlayer = new Player
-            {
-                Name = "Studentas-" + playersList.Count.ToString(),
-                Score = 100,
-                PosX = rnd.Next(10, (int)this.Width),
-                PosY = rnd.Next(10, (int)this.Height)
-            };
-
-            var url = await requestController.CreatePlayerAsync(myPlayer);
-
-            url1 = url.PathAndQuery;
-            myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
             listOfPlayers.Add(myPlayer);
 
             this.Form1_PaintPlayer(myPlayer);
@@ -287,16 +271,6 @@ namespace WpfApp1
             //Pen pen = new Pen(Color.Black);
             //formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
             //this.Invalidate()
-        }
-
-        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            var statusCode = await requestController.DeletePlayerAsync(myPlayer.Id);
-        }
-
-        private void Window_Closing(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

@@ -13,7 +13,7 @@
                 <GradientStop Color="#FF57BD79" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Button Content="PLAY NX" HorizontalAlignment="Left" Margin="281,168,0,0" VerticalAlignment="Top" Width="245" Height="98" Click="Button_Click"/>
+        <Button Content="JOIN LOBBY" HorizontalAlignment="Center" Margin="0,0,-6,0" VerticalAlignment="Center" Width="245" Height="98" Click="Button_Click"/>
 
     </Grid>
 </UserControl>

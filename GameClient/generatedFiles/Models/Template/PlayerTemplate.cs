@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace GameClient.generatedFiles.Models
 {
-    abstract class PlayerTemplate
+    public abstract class PlayerTemplate
     {
         Player player { get; set; }
         RequestsController RC = new RequestsController();
 
-        public void SetPlayer(Player x)
+        public void SetPlayerTemplate(Player x)
         {
             this.player = x;
         }
 
         public async Task<bool> Ready()
         {
-            if (IsHost())
+            if (CheckIfHost())
             {
                 var IsFull = await RC.GameIsFull("http://localhost:47850/");
                 if (IsFull)
@@ -30,11 +30,11 @@ namespace GameClient.generatedFiles.Models
                 return false;
             }
 
-            if (IsReady() && !IsHost())
+            if (CheckIfReady() && !CheckIfHost())
             {
                 return await RC.GameIsStarted("http://localhost:47850/");
             }
-            else if (!IsReady())
+            else if (!CheckIfReady())
             {
                 var code = await RC.UpdatePlayerReadyState("http://localhost:47850/", player.Id);
             }
@@ -42,8 +42,8 @@ namespace GameClient.generatedFiles.Models
             return false;
         }
 
-        public abstract bool IsHost();
+        public abstract bool CheckIfHost();
 
-        public abstract bool IsReady();
+        public abstract bool CheckIfReady();
     }
 }

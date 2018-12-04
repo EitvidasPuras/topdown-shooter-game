@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameClient.Models;
 using GameServer.Models;
+using System.Net.Http.Headers;
 
 namespace GameClientWpf
 {
@@ -16,6 +17,13 @@ namespace GameClientWpf
         public HttpClient client = new HttpClient();
         public string requestUri = "api/player/";
         public string mediaType = "application/json";
+
+        public RequestsController()
+        {
+            client.BaseAddress = new Uri("http://localhost:47850/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
+        }
 
         public void ShowProduct(Player player)
         {

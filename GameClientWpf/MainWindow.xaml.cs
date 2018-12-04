@@ -25,10 +25,19 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Player MyPlayer { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             this.Content = new MainMenu();
+        }
+
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (MyPlayer != null)
+            {
+                var statusCode = await new RequestsController().DeletePlayerAsync(MyPlayer.Id);
+            }
         }
     }
 }
