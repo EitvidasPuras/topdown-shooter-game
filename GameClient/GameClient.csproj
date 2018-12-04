@@ -199,6 +199,7 @@
     <Compile Include="generatedFiles\Models\Builder\PrimaryWeaponBuilder.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\Secondary.cs" />
     <Compile Include="generatedFiles\Models\Builder\SecondaryWeaponBuilder.cs" />
+    <Compile Include="generatedFiles\Models\Template\PlayerTemplate.cs" />
     <Compile Include="generatedFiles\Models\SingletonLog.cs" />
     <Compile Include="generatedFiles\Models\Weapon.cs" />
     <Compile Include="MainForm.cs">

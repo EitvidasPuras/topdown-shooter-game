@@ -40,6 +40,33 @@ namespace GameClientWpf
             return response.Headers.Location;
         }
 
+        public async Task<Uri> JoinGame()
+        {
+            Random rnd = new Random();
+
+            Player player = new Player
+            {
+                Name = "Studentas-" + rnd.Next(10, 100),
+                Score = 100,
+                PosX = rnd.Next(10, 800),
+                PosY = rnd.Next(10, 600)
+            };
+
+            HttpResponseMessage response = await client.PostAsJsonAsync(
+                requestUri, player);
+            response.EnsureSuccessStatusCode();
+
+            // Deserialize the updated product from the response body.
+            Player player2 = await response.Content.ReadAsAsync<Player>();
+            if (player2 != null)
+            {
+                ShowProduct(player2);
+            }
+
+            // return URI of the created resource.
+            return response.Headers.Location;
+        }
+
         public async Task<ICollection<Player>> GetAllPlayerAsync(string path)
         {
             ICollection<Player> players = null;
@@ -123,6 +150,41 @@ namespace GameClientWpf
         {
             HttpResponseMessage response = await client.DeleteAsync(
                 requestUri + $"{id}");
+            return response.StatusCode;
+        }
+
+        public async Task<bool> GameIsFull(string path)
+        {
+            HttpResponseMessage response = await client.GetAsync(path + "api/game/is-full");
+            return await response.Content.ReadAsAsync<bool>();
+        }
+
+        public async Task<bool> GameIsReady(string path)
+        {
+            HttpResponseMessage response = await client.GetAsync(path + "api/game/is-ready");
+            return await response.Content.ReadAsAsync<bool>();
+        }
+        public async Task<bool> GameIsStarted(string path)
+        {
+            HttpResponseMessage response = await client.GetAsync(path + "api/game/is-started");
+            return await response.Content.ReadAsAsync<bool>();
+        }
+        public async Task<bool> StartGame(string path)
+        {
+            HttpResponseMessage response = await client.GetAsync(path + "api/game/start");
+            return await response.Content.ReadAsAsync<bool>();
+        }
+
+
+        public async Task<HttpStatusCode> UpdatePlayerReadyState(string path, long id)
+        {
+            HttpRequestMessage request = new HttpRequestMessage
+            {
+                Method = new HttpMethod("PATCH"),
+                RequestUri = new Uri(path + "api/player/ready/" + id)
+            };
+
+            HttpResponseMessage response = await client.SendAsync(request);
             return response.StatusCode;
         }
 

@@ -33,50 +33,46 @@ namespace GameServer.Controllers
             if (_gameContext.Game.Count() == 0)
             {
                 // Create a new Game if collection is empty
-                Game g = new Game { Id = 1, Full = false, IsMapReady = false };
+                Game g = new Game { Id = 1, Full = false, IsMapReady = false, IsMapStarted = false };
                 _gameContext.Add(g);
                 _gameContext.SaveChanges();
             }
         }
 
         [HttpGet("is-full")]
-        public ActionResult<bool> GetFull()
+        public ActionResult<bool> IsFull()
         {
             if(_playerContext.Players.Count() >= maxPlayers)
             {
-                var game = _gameContext.Game.Find(1);
-                game.Full = true;
-                _gameContext.Game.Update(game);
-                _gameContext.SaveChanges();
-                //roomIsFull = true;
-
-                //if (!mapIsBeingGenerated)
-                //{
-                //    mapIsBeingGenerated = true;
-                    
-                //    MapFacade mapFacade = new MapFacade(_obstacleContext, _weaponContext);
-                //    mapFacade.generateMap();
-
-                //    mapGenerated = true;
-                //}
-
-                if (!game.IsMapReady)
+                if (AllPlayersReady())
                 {
-                    game.IsMapReady = true;
+                    var game = _gameContext.Game.Find(1);
+                    game.Full = true;
                     _gameContext.Game.Update(game);
                     _gameContext.SaveChanges();
 
-                    MapFacade mapFacade = new MapFacade(_obstacleContext, _weaponContext);
-                    mapFacade.generateMap();
-                }
+                    if (!game.IsMapReady)
+                    {
+                        game.IsMapReady = true;
+                        _gameContext.Game.Update(game);
+                        _gameContext.SaveChanges();
 
-                return true;
+                        MapFacade mapFacade = new MapFacade(_obstacleContext, _weaponContext);
+                        mapFacade.generateMap();
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             return false;
         }
 
         [HttpGet("is-ready")]
-        public ActionResult<bool> GetReady()
+        public ActionResult<bool> IsReady()
         {
             var game = _gameContext.Game.Find(1);
 
@@ -85,6 +81,46 @@ namespace GameServer.Controllers
                 return true;
             }
             return false;
+        }
+
+        [HttpGet("start")]
+        public ActionResult<bool> StartGame()
+        {
+            var game = _gameContext.Game.Find(1);
+
+            if (game.Full && game.IsMapReady)
+            {
+                game.IsMapStarted = true;
+                _gameContext.Game.Update(game);
+                _gameContext.SaveChanges();
+
+                return true;
+            }
+            return false;
+        }
+
+        [HttpGet("is-started")]
+        public ActionResult<bool> IsStarted()
+        {
+            var game = _gameContext.Game.Find(1);
+
+            if (game.Full && game.IsMapReady && game.IsMapStarted)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool AllPlayersReady()
+        {
+            foreach(Player player in _playerContext.Players)
+            {
+                if (!player.IsReady)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

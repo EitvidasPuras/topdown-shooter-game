@@ -16,6 +16,8 @@ namespace GameServer
             public long PosX { get; set; }
             public long PosY { get; set; }
             public int Health { get; set; }
+            public bool IsHost { get; set; }
+            public bool IsReady { get; set; }
 
             Weapon PrimaryWeapon;
 			

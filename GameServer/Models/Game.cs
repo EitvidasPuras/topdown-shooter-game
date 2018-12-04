@@ -8,6 +8,7 @@ namespace GameServer.Models
         public int Id { get; set; }
         public bool Full { get; set; }
         public bool IsMapReady { get; set; }
+        public bool IsMapStarted { get; set; }
         public Game()
         {
         }

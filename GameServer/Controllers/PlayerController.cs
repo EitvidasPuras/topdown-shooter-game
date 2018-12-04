@@ -87,6 +87,17 @@ namespace GameServer.Controllers
         //public string Create(Player player)
         public ActionResult<Player> Create([FromBody] Player player)
         {
+            if(_context.Players.Count() == 0)
+            {
+                player.IsHost = true;
+                player.IsReady = true;
+            }
+            else
+            {
+                player.IsHost = false;
+                player.IsReady = false;
+            }
+
             _context.Players.Add(player);
             _context.SaveChanges();
 
@@ -138,6 +149,27 @@ namespace GameServer.Controllers
                 _context.Players.Update(player);
                 _context.SaveChanges();
             }
+            return Ok();
+            //return CreatedAtRoute("GetPlayer", new { id = player.Id }, player);
+        }
+
+        [HttpPatch("ready/{id}")]
+        public IActionResult UpdateReadyState(long id)
+        {
+            var player = _context.Players.Find(id);
+            var players = _context.Players;
+            if (player == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                player.IsReady = !player.IsReady;
+
+                _context.Players.Update(player);
+                _context.SaveChanges();
+            }
+
             return Ok();
             //return CreatedAtRoute("GetPlayer", new { id = player.Id }, player);
         }
