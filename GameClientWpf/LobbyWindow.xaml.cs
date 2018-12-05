@@ -111,6 +111,7 @@ namespace WpfApp1
 
             if (allPlayersReady)
             {
+
                 if (await requestController.GameIsStarted(requestController.client.BaseAddress.PathAndQuery))
                 {
                     dispatcherTimer.Stop();
@@ -119,14 +120,10 @@ namespace WpfApp1
 
                 if (myPlayer.IsHost)
                 {
-                    if (await requestController.GameIsFull(requestController.client.BaseAddress.PathAndQuery))
+                    if (await myPlayer.Ready())
                     {
-                        if (await requestController.GameIsReady(requestController.client.BaseAddress.PathAndQuery))
-                        {
-                            startgameButton.IsEnabled = true;
-                        }
+                        startgameButton.IsEnabled = true;
                     }
-
                 }
             }
         }
