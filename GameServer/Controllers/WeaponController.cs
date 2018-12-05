@@ -15,9 +15,12 @@ namespace GameServer.Controllers
     {
         private readonly WeaponContext _context;
 
-        public WeaponController(WeaponContext context)
+        private readonly PlayerContext _playerContext;
+
+        public WeaponController(WeaponContext context, PlayerContext playerContext)
         {
             _context = context;
+            _playerContext = playerContext;
         }
 
         // GET: api/Weapon
@@ -127,5 +130,60 @@ namespace GameServer.Controllers
         //{
         //    return _context.Weapon.Any(e => e.Id == id);
         //}
+
+        [HttpPut("picked-up/{id}")]
+        public IActionResult Update(int id, [FromBody] long pid)
+        {
+            var ww = _context.Weapons.Find(id);
+            if (ww == null)
+            {
+                return NotFound();
+            }
+
+            ww.IsOnTheGround = false;
+
+            _context.Weapons.Update(ww);
+            _context.SaveChanges();
+
+            var pp = _playerContext.Players.Find(pid);
+            if (pp == null)
+            {
+                return NotFound();
+            }
+
+            if (ww is Primary)
+            {
+                if (pp.pickupPrimary((Primary)ww))
+                {
+                    _playerContext.Players.Update(pp);
+                    _playerContext.SaveChanges();
+                    return Ok();
+                }
+            }
+            else if (ww is Secondary)
+            {
+                if (pp.pickupSecondary((Secondary)ww))
+                {
+                    _playerContext.Players.Update(pp);
+                    _playerContext.SaveChanges();
+                    return Ok();
+                }
+            }
+            else
+            {
+                if (pp.pickupGrenade((GrenadeAdapter)ww))
+                {
+                    _playerContext.Players.Update(pp);
+                    _playerContext.SaveChanges();
+                    return Ok();
+                }
+
+            }
+
+            _playerContext.Players.Update(pp);
+            _playerContext.SaveChanges();
+
+            return Ok(); //NoContent();
+        }
     }
 }

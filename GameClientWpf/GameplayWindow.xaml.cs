@@ -1,24 +1,15 @@
-﻿using GameClient.Models;
-using GameServer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using GameClient;
+﻿using GameClient;
 using GameClient.Models;
 using GameClientWpf;
 using GameServer.Models;
+using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 
 namespace WpfApp1
@@ -40,6 +31,8 @@ namespace WpfApp1
         string url1 = "";
         List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
         List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
+        ICollection<Weapon> weaponsList;
+        ICollection<Player> playersList;
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
 
         Dictionary<long, Image> UIPlayers = new Dictionary<long, Image>();
@@ -52,8 +45,8 @@ namespace WpfApp1
         {
             Console.WriteLine("0)\tGet all player");
 
-            ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
-            ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
+            playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+            weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
 
             foreach (Weapon w in weaponsList)
             {
@@ -68,7 +61,7 @@ namespace WpfApp1
                 listOfPlayers.Add(p);
                 this.Form1_PaintPlayer(p);
             }
-            
+
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += timer1_TickAsync;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 300);
@@ -106,8 +99,6 @@ namespace WpfApp1
         {
             if (weaponName.Contains("AK47"))
             {
-                //Image image = Image.FromFile(@"..\\..\\assets\\ak47.png");
-                //formGraphics.DrawImage(image, x, y);
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/ak47.png", UriKind.Relative));
@@ -116,8 +107,6 @@ namespace WpfApp1
             }
             else if (weaponName.Contains("M4A1"))
             {
-                //Image image = Image.FromFile(@"..\\..\\assets\\m4a1.png");
-                //formGraphics.DrawImage(image, x, y);
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/m4a1.png", UriKind.Relative));
@@ -126,8 +115,6 @@ namespace WpfApp1
             }
             else if (weaponName.Contains("DesertEagle"))
             {
-                //Image image = Image.FromFile(@"..\\..\\assets\\deserteagle.png");
-                //formGraphics.DrawImage(image, x, y);
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/deserteagle.png", UriKind.Relative));
@@ -136,8 +123,6 @@ namespace WpfApp1
             }
             else if (weaponName.Contains("P250"))
             {
-                //Image image = Image.FromFile(@"..\\..\\assets\\p250.png");
-                //formGraphics.DrawImage(image, x, y);
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/p250.png", UriKind.Relative));
@@ -146,8 +131,6 @@ namespace WpfApp1
             }
             else if (weaponName.Contains("Grenade"))
             {
-                //Image image = Image.FromFile(@"..\\..\\assets\\grenade.png");
-                //formGraphics.DrawImage(image, x, y);
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/grenade.png", UriKind.Relative));
@@ -173,8 +156,8 @@ namespace WpfApp1
             if (updated)
             {
                 //this.Invalidate();
-                ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
-                ICollection<Weapon> weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
+                playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
+                weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
 
                 foreach (Player p in playersList)
                 {
@@ -232,20 +215,57 @@ namespace WpfApp1
                 case Key.W:
                     coordinates.PosY -= 15;
                     patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    CheckIfWeaponNearby();
                     break;
                 case Key.A:
                     coordinates.PosX -= 15;
                     patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    CheckIfWeaponNearby();
                     break;
                 case Key.S:
                     coordinates.PosY += 15;
                     patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    CheckIfWeaponNearby();
                     break;
                 case Key.D:
                     coordinates.PosX += 15;
                     patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    CheckIfWeaponNearby();
                     break;
             }
+        }
+
+        private async void CheckIfWeaponNearby()
+        {
+            myPlayer = await requestController.GetPlayerAsync(url1);
+            foreach (var weapon in weaponsList)
+            {
+                if (Math.Abs(weapon.PosX - myPlayer.PosX) <= 20 || Math.Abs(weapon.PosY - myPlayer.PosY) <= 20)
+                {
+                    if (weapon is Primary)
+                    {
+                        if (myPlayer.pickupPrimary((Primary)weapon))
+                        {
+                            await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                        }
+                    }
+                    else if (weapon is Secondary)
+                    {
+                        if (myPlayer.pickupSecondary((Secondary)weapon))
+                        {
+                            await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                        }
+                    }
+                    else
+                    {
+                        if (myPlayer.pickupGrenade((GrenadeAdapter)weapon))
+                        {
+                            await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                        }
+                    }
+                }
+            }
+
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)

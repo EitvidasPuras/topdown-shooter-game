@@ -19,18 +19,24 @@ namespace GameServer
             public int Health { get; set; }
             public bool IsHost { get; set; }
             public bool IsReady { get; set; }
+            public Primary PrimaryWeapon { get; set; }
 
-            Weapon PrimaryWeapon;
-			
-			Weapon SecondaryWeapon;
-            
-            Weapon Grenade;
-			
-			Weapon EquippedWeapon;
-			
-			bool ChangedStatus;
-			
-			public void equipPrimary()
+            public Secondary SecondaryWeapon { get; set; }
+
+            public GrenadeAdapter Grenade { get; set; }
+
+            public Weapon EquippedWeapon { get; set; }
+
+            public bool ChangedStatus { get; set; }
+
+            public void SetFakeWeapons()
+            {
+                Random rnd = new Random();
+                PrimaryWeapon = new AK47(rnd.Next(-1000, -1), "-1");
+                SecondaryWeapon = new DesertEagle(rnd.Next(-1000, -1), "-1");
+            }
+
+            public void equipPrimary()
 			{
                 if (PrimaryWeapon != null)
                 {
@@ -52,33 +58,42 @@ namespace GameServer
                     EquippedWeapon = Grenade;
                 }
             }
-			
-			public void pickupPrimary(Weapon gun)
-			{
-                if (PrimaryWeapon == null)
+
+            public bool pickupPrimary(Primary gun)
+            {
+                if (PrimaryWeapon == null || PrimaryWeapon.Id < 0)
                 {
                     PrimaryWeapon = gun;
                     gun.equip();
+                    return true;
                 }
-			}
-			
-			public void pickupSecondary(Weapon gun)
+
+                return false;
+            }
+
+            public bool pickupSecondary(Secondary gun)
 			{
-                if (SecondaryWeapon == null)
+                if (SecondaryWeapon == null || SecondaryWeapon.Id < 0)
                 {
                     SecondaryWeapon = gun;
                     gun.equip();
+                    return true;
                 }
-            }
 
-            public void pickupGrenade(Weapon gun)
+			    return false;
+			}
+
+            public bool pickupGrenade(GrenadeAdapter gun)
 			{
                 if (Grenade == null)
                 {
                     Grenade = gun;
                     gun.equip();
+                    return true;
                 }
-            }
+
+			    return false;
+			}
 			
 			public bool checkEquality(Player newData)
 			{

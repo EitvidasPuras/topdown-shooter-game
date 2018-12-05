@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using GameClient.Models;
+using GameServer.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GameClient.Models;
 using GameServer.Models;
@@ -16,6 +16,7 @@ namespace GameClientWpf
     {
         public HttpClient client = new HttpClient();
         public string requestUri = "api/player/";
+        public string requestUriWeapons = "api/weapon/";
         public string mediaType = "application/json";
 
         public RequestsController()
@@ -23,6 +24,7 @@ namespace GameClientWpf
             client.BaseAddress = new Uri("http://localhost:47850/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(mediaType));
         }
 
         public void ShowProduct(Player player)
@@ -115,6 +117,15 @@ namespace GameClientWpf
                 weapons.Add(weapon);
             }
             return weapons;
+        }
+
+        public async Task<HttpStatusCode> UpdateWeaponIsOnTheGroundStatusAsync(Weapon weapon, Player player)
+        {
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+                requestUriWeapons + "picked-up/" + $"{weapon.Id}", player.Id);
+            response.EnsureSuccessStatusCode();
+
+            return response.StatusCode;
         }
 
         public async Task<Player> GetPlayerAsync(string path)

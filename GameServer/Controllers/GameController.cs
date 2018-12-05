@@ -44,8 +44,8 @@ namespace GameServer.Controllers
         {
             if(_playerContext.Players.Count() >= maxPlayers)
             {
-                if (AllPlayersReady())
-                {
+                //if (AllPlayersReady())
+                //{
                     var game = _gameContext.Game.Find(1);
                     game.Full = true;
                     _gameContext.Game.Update(game);
@@ -62,11 +62,11 @@ namespace GameServer.Controllers
                     }
 
                     return true;
-                }
-                else
-                {
-                    return false;
-                }
+                //}
+                //else
+                //{
+                //    return false;
+                //}
             }
             return false;
         }

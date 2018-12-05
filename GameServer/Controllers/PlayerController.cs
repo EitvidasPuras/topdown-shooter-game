@@ -73,6 +73,7 @@ namespace GameServer.Controllers
         //public string Create(Player player)
         public ActionResult<Player> Create([FromBody] Player player)
         {
+            //player.SetFakeWeapons();
             if(_context.Players.Count() == 0)
             {
                 player.IsHost = true;
