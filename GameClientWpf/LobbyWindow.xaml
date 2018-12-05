@@ -13,7 +13,7 @@
                 <GradientStop Color="#FF2B8203" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Button x:Name="startgameButton" Content="Start game" HorizontalAlignment="Right" Margin="0,0,50,50" VerticalAlignment="Bottom" Width="75" IsEnabled="False"/>
+        <Button x:Name="startgameButton" Content="Start game" HorizontalAlignment="Right" Margin="0,0,50,50" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="startgameButton_Click"/>
         <Button Content="Back" HorizontalAlignment="Left" Margin="50,0,0,50" VerticalAlignment="Bottom" Width="75"/>
         <ListView x:Name="playerListView" HorizontalAlignment="Center" Height="282" Margin="300,50,300,0" VerticalAlignment="Top" Width="200" Loaded="ListView_Loaded" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
             <ListView.View>

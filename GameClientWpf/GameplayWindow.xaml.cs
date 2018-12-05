@@ -66,25 +66,12 @@ namespace WpfApp1
             foreach (Player p in playersList)
             {
                 listOfPlayers.Add(p);
-                //Coordinates coordinates = new Coordinates
-                //{
-                //    Id = p.Id,
-                //    PosX = rnd.Next(10, this.Width),
-                //    PosY = rnd.Next(10, this.Height)
-                //};
-                //var patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
                 this.Form1_PaintPlayer(p);
             }
-
-            listOfPlayers.Add(myPlayer);
-
-            this.Form1_PaintPlayer(myPlayer);
-
-            playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
-
+            
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += timer1_TickAsync;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 300);
             dispatcherTimer.Start();
             Focus();
         }
@@ -124,7 +111,7 @@ namespace WpfApp1
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/ak47.png", UriKind.Relative));
-                img.Margin = new Thickness(x, y, 0, 0);
+                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("M4A1"))
@@ -134,7 +121,7 @@ namespace WpfApp1
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/m4a1.png", UriKind.Relative));
-                img.Margin = new Thickness(x, y, 0, 0);
+                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("DesertEagle"))
@@ -144,7 +131,7 @@ namespace WpfApp1
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/deserteagle.png", UriKind.Relative));
-                img.Margin = new Thickness(x, y, 0, 0);
+                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("P250"))
@@ -154,7 +141,7 @@ namespace WpfApp1
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/p250.png", UriKind.Relative));
-                img.Margin = new Thickness(x, y, 0, 0);
+                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("Grenade"))
@@ -164,7 +151,7 @@ namespace WpfApp1
                 Image img = new Image();
                 LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/grenade.png", UriKind.Relative));
-                img.Margin = new Thickness(x, y, 0, 0);
+                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
         }
@@ -221,7 +208,8 @@ namespace WpfApp1
 
                 foreach (Weapon w in weaponsList)
                 {
-                    this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
+                    //reik atnaujint weapon piešimą
+                    //this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
                 }
             }
         }

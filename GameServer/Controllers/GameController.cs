@@ -18,7 +18,7 @@ namespace GameServer.Controllers
         private readonly ObstacleContext _obstacleContext;
         private readonly WeaponContext _weaponContext;
         public int Qty { get; set; } = 0;
-        public int maxPlayers = 3;
+        public int maxPlayers = 2;
         //private bool mapIsBeingGenerated = false;
         //private bool mapGenerated = false;
         //private bool roomIsFull = false;
@@ -104,11 +104,44 @@ namespace GameServer.Controllers
         {
             var game = _gameContext.Game.Find(1);
 
+            
+
+            if (_playerContext.Players.Count() < 1)
+            {
+                game.IsMapReady = false;
+                game.Full = false;
+                game.IsMapStarted = false;
+
+                foreach (var weapon in _weaponContext.Weapons)
+                {
+                    _weaponContext.Weapons.Remove(weapon);
+                }
+
+                foreach (var obstacles in _obstacleContext.Obstacles)
+                {
+                    _obstacleContext.Obstacles.Remove(obstacles);
+                }
+
+                foreach (var rectangles in _obstacleContext.Rectangles)
+                {
+                    _obstacleContext.Rectangles.Remove(rectangles);
+                }
+
+                _gameContext.Game.Update(game);
+                _gameContext.SaveChanges();
+                _weaponContext.SaveChanges();
+                _obstacleContext.SaveChanges();
+
+                return false;
+            }
+
             if (game.Full && game.IsMapReady && game.IsMapStarted)
             {
                 return true;
             }
+
             return false;
+            
         }
 
         public bool AllPlayersReady()

@@ -26,6 +26,7 @@ namespace WpfApp1
         RequestsController requestController = new RequestsController();
         Player myPlayer;
         Uri url;
+        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public LobbyWindow()
         {
             InitializeComponent();
@@ -34,22 +35,30 @@ namespace WpfApp1
 
         private async void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            url = await requestController.JoinGame();
-            myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
-            myPlayer.SetPlayerTemplate(myPlayer);
-            if (myPlayer.IsHost)
+            if(!await requestController.GameIsStarted(requestController.client.BaseAddress.PathAndQuery))
             {
-                startgameButton.IsEnabled = true;
-            }
-            (Application.Current.MainWindow as MainWindow).MyPlayer = myPlayer;
+                url = await requestController.JoinGame();
+                myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
+                myPlayer.SetPlayerTemplate(myPlayer);
+                if (myPlayer.IsHost)
+                {
+                    startgameButton.IsEnabled = false;
+                }
+                (Application.Current.MainWindow as MainWindow).MyPlayer = myPlayer;
 
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += timer1_TickAsync;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            dispatcherTimer.Start();
+                //System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+                dispatcherTimer.Tick += timer11_TickAsync;
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 800);
+                dispatcherTimer.Start();
+            }
+            else
+            {
+                Application.Current.Shutdown();
+            }
+            
         }
 
-        private async void timer1_TickAsync(object sender, EventArgs e)
+        private async void timer11_TickAsync(object sender, EventArgs e)
         {
             ICollection<Player> playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
 
@@ -104,7 +113,20 @@ namespace WpfApp1
             {
                 if (await requestController.GameIsStarted(requestController.client.BaseAddress.PathAndQuery))
                 {
+                    dispatcherTimer.Stop();
                     Application.Current.MainWindow.Content = new GameplayWindow(myPlayer, url.ToString());
+                }
+
+                if (myPlayer.IsHost)
+                {
+                    if (await requestController.GameIsFull(requestController.client.BaseAddress.PathAndQuery))
+                    {
+                        if (await requestController.GameIsReady(requestController.client.BaseAddress.PathAndQuery))
+                        {
+                            startgameButton.IsEnabled = true;
+                        }
+                    }
+
                 }
             }
         }
@@ -112,6 +134,11 @@ namespace WpfApp1
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             await myPlayer.Ready();
+        }
+
+        private async void startgameButton_Click(object sender, RoutedEventArgs e)
+        {
+            await requestController.StartGame(requestController.client.BaseAddress.PathAndQuery);
         }
     }
 }
