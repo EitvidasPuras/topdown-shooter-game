@@ -14,7 +14,8 @@ namespace GameServer.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly PlayerContext _context;
-   
+        private readonly WeaponContext _contextweps;
+
         private readonly GameContext _context2;
         public int Qty { get; set; } = 0;
 
@@ -24,9 +25,10 @@ namespace GameServer.Controllers
         //    return View("this in index");
         //}
 
-        public PlayerController(PlayerContext context)
+        public PlayerController(PlayerContext context, WeaponContext weps)
         {
             _context = context;
+            _contextweps = weps;
         }
 
         [Route("updated/{id}")]
@@ -85,9 +87,11 @@ namespace GameServer.Controllers
                 player.IsReady = false;
             }
 
+            Weapon wep = player.SetFakeWeapons();
             _context.Players.Add(player);
             _context.SaveChanges();
-
+            //_contextweps.Weapons.Add(wep);
+            //_contextweps.SaveChanges();
             //return Ok(); //"created - ok"; 
             return CreatedAtRoute("GetPlayer", new { id = player.Id }, player);
         }

@@ -21,9 +21,9 @@ namespace GameServer
 
             public bool IsReady { get; set; }
 
-            public Primary PrimaryWeapon { get; set; }
+            public virtual Primary PrimaryWeapon { get; set; }
 
-            public Secondary SecondaryWeapon { get; set; }
+            public virtual Secondary SecondaryWeapon { get; set; }
 
             public GrenadeAdapter Grenade { get; set; }
 
@@ -33,17 +33,18 @@ namespace GameServer
 
             public Player()
             {
-                Random rnd = new Random();
-                PrimaryWeapon = new AK47(rnd.Next(-1000, -1), "-1");
-                SecondaryWeapon = new DesertEagle(rnd.Next(-1000, -1), "-1");
+                //Random rnd = new Random();
+                //PrimaryWeapon = new AK47(rnd.Next(-1000, -1), "-1");
+                //SecondaryWeapon = new DesertEagle(rnd.Next(-1000, -1), "-1");
             }
 
-            //public void SetFakeWeapons()
-            //{
-            //    Random rnd = new Random();
-            //    PrimaryWeapon = new AK47(rnd.Next(-1000, -1), "-1");
-            //    SecondaryWeapon = new DesertEagle(rnd.Next(-1000, -1), "-1");
-            //}
+            public Primary SetFakeWeapons()
+            {
+                Random rnd = new Random();
+                PrimaryWeapon = new AK47(rnd.Next(-1000, -1), "-1");
+                // SecondaryWeapon = new DesertEagle(rnd.Next(-1000, -1), "-1");
+                return PrimaryWeapon;
+            }
 
             public void equipPrimary()
             {

@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using System.Windows.Shapes;
 
 namespace WpfApp1
 {
@@ -21,6 +21,7 @@ namespace WpfApp1
     {
         Player myPlayer;
         RequestsController requestController = new RequestsController();
+        Line laser;
         public GameplayWindow(Player myPlayer, string url)
         {
             InitializeComponent();
@@ -61,6 +62,25 @@ namespace WpfApp1
                 listOfPlayers.Add(p);
                 this.Form1_PaintPlayer(p);
             }
+
+            // Create a Line  
+            laser = new Line();
+            laser.X1 = 50;
+            laser.Y1 = 50;
+            laser.X2 = 200;
+            laser.Y2 = 200;
+
+            // Create a red Brush  
+            SolidColorBrush whiteBrush = new SolidColorBrush();
+            whiteBrush.Color = Colors.GhostWhite;
+
+            // Set Line's width and color  
+            laser.StrokeThickness = 1;
+            laser.Stroke = whiteBrush;
+
+            // Add line to the Grid.  
+            LayoutRoot.Children.Add(laser);
+
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += timer1_TickAsync;
@@ -156,7 +176,7 @@ namespace WpfApp1
                     Player oldPlayer = listOfPlayers.Find(i => i.Id == p.Id);
                     if (oldPlayer != null)
                     {
-                        if (true)//(!oldPlayer.checkEquality(p))
+                        if (!oldPlayer.checkEquality(p))
                         {
                             if (p.Id == myPlayer.Id)
                             {
@@ -271,6 +291,39 @@ namespace WpfApp1
             //Pen pen = new Pen(Color.Black);
             //formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
             //this.Invalidate()
+        }
+
+        private void UserControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (laser != null)
+            {
+                laser.X1 = myPlayer.PosX;
+                laser.Y1 = myPlayer.PosY;
+                laser.X2 = e.GetPosition(LayoutRoot).X;
+                laser.Y2 = e.GetPosition(LayoutRoot).Y;
+                laser.RenderTransform = new TranslateTransform();
+            }
+
+            //Image img;
+            //if (UIPlayers.TryGetValue(myPlayer.Id, out img))
+            //{
+            //    var somePoint = e.GetPosition(LayoutRoot);
+            //    double X = somePoint.X;
+            //    double Y = somePoint.Y;
+
+            //    var newX = Math.Abs(X - myPlayer.PosX - 400);
+            //    var newY = Math.Abs(Y - myPlayer.PosY - 300);
+            //    var powX = Math.Pow(newX, 2);
+            //    var powY = Math.Pow(newY, 2);
+            //    var distance = Math.Sqrt(powX + powY);
+            //    var result = newX / distance;
+
+            //    double Angle = Math.Asin(result) * (180.0 / Math.PI);
+            //    RotateTransform rotateTransform = new RotateTransform(Angle);
+            //    TransformGroup bbz = new TransformGroup();
+            //    bbz.Children.Add(rotateTransform);
+            //    img.RenderTransform = bbz;
+            //}
         }
     }
 }
