@@ -151,34 +151,34 @@ namespace GameServer.Controllers
                 return NotFound();
             }
 
-            if (ww is Primary)
-            {
-                if (pp.pickupPrimary((Primary)ww))
-                {
-                    _playerContext.Players.Update(pp);
-                    _playerContext.SaveChanges();
-                    return Ok();
-                }
-            }
-            else if (ww is Secondary)
-            {
-                if (pp.pickupSecondary((Secondary)ww))
-                {
-                    _playerContext.Players.Update(pp);
-                    _playerContext.SaveChanges();
-                    return Ok();
-                }
-            }
-            else
-            {
-                if (pp.pickupGrenade((GrenadeAdapter)ww))
-                {
-                    _playerContext.Players.Update(pp);
-                    _playerContext.SaveChanges();
-                    return Ok();
-                }
+            //if (ww is Primary)
+            //{
+            //    if (pp.pickupPrimary((Primary)ww))
+            //    {
+            //        _playerContext.Players.Update(pp);
+            //        _playerContext.SaveChanges();
+            //        return Ok();
+            //    }
+            //}
+            //else if (ww is Secondary)
+            //{
+            //    if (pp.pickupSecondary((Secondary)ww))
+            //    {
+            //        _playerContext.Players.Update(pp);
+            //        _playerContext.SaveChanges();
+            //        return Ok();
+            //    }
+            //}
+            //else
+            //{
+            //    if (pp.pickupGrenade((GrenadeAdapter)ww))
+            //    {
+            //        _playerContext.Players.Update(pp);
+            //        _playerContext.SaveChanges();
+            //        return Ok();
+            //    }
 
-            }
+            //}
 
             _playerContext.Players.Update(pp);
             _playerContext.SaveChanges();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GameServer.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,7 +15,6 @@ namespace GameServer.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly PlayerContext _context;
-        private readonly WeaponContext _contextweps;
 
         private readonly GameContext _context2;
         public int Qty { get; set; } = 0;
@@ -25,10 +25,9 @@ namespace GameServer.Controllers
         //    return View("this in index");
         //}
 
-        public PlayerController(PlayerContext context, WeaponContext weps)
+        public PlayerController(PlayerContext context)
         {
             _context = context;
-            _contextweps = weps;
         }
 
         [Route("updated/{id}")]
@@ -56,6 +55,10 @@ namespace GameServer.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Player>> GetAll()
         {
+            _context.Players.Include(c => c.PrimaryWeapon).ToList();
+            _context.Players.Include(c => c.SecondaryWeapon).ToList();
+            _context.Players.Include(c => c.Grenade).ToList();
+            _context.Players.Include(c => c.EquippedWeapon).ToList();
             return _context.Players.ToList();
         }
 
@@ -75,7 +78,6 @@ namespace GameServer.Controllers
         //public string Create(Player player)
         public ActionResult<Player> Create([FromBody] Player player)
         {
-            //player.SetFakeWeapons();
             if(_context.Players.Count() == 0)
             {
                 player.IsHost = true;
@@ -87,12 +89,10 @@ namespace GameServer.Controllers
                 player.IsReady = false;
             }
 
-            Weapon wep = player.SetFakeWeapons();
+            player.SetFakeWeapons();
             _context.Players.Add(player);
             _context.SaveChanges();
-            //_contextweps.Weapons.Add(wep);
-            //_contextweps.SaveChanges();
-            //return Ok(); //"created - ok"; 
+            return Ok(); //"created - ok"; 
             return CreatedAtRoute("GetPlayer", new { id = player.Id }, player);
         }
 
