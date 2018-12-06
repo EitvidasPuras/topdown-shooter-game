@@ -97,42 +97,34 @@ namespace WpfApp1
 
         private void Form1_PaintWeapons(int x, int y, string weaponName)
         {
+            Image img = new Image();
+            LayoutRoot.Children.Add(img);
             if (weaponName.Contains("AK47"))
             {
-                Image img = new Image();
-                LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/ak47.png", UriKind.Relative));
                 img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("M4A1"))
             {
-                Image img = new Image();
-                LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/m4a1.png", UriKind.Relative));
                 img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("DesertEagle"))
             {
-                Image img = new Image();
-                LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/deserteagle.png", UriKind.Relative));
                 img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("P250"))
             {
-                Image img = new Image();
-                LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/p250.png", UriKind.Relative));
                 img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
             else if (weaponName.Contains("Grenade"))
             {
-                Image img = new Image();
-                LayoutRoot.Children.Add(img);
                 img.Source = new BitmapImage(new Uri("/images/grenade.png", UriKind.Relative));
                 img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;

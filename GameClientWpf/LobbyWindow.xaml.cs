@@ -43,6 +43,7 @@ namespace WpfApp1
                 if (myPlayer.IsHost)
                 {
                     startgameButton.IsEnabled = false;
+                    backgameButton.IsEnabled = false;
                 }
                 (Application.Current.MainWindow as MainWindow).MyPlayer = myPlayer;
 
@@ -136,6 +137,13 @@ namespace WpfApp1
         private async void startgameButton_Click(object sender, RoutedEventArgs e)
         {
             await requestController.StartGame(requestController.client.BaseAddress.PathAndQuery);
+        }
+
+        private async void backgameButton_Click(object sender, RoutedEventArgs e)
+        {
+            await requestController.DeletePlayerAsync(myPlayer.Id);
+            dispatcherTimer.Stop();
+            Application.Current.MainWindow.Content = new MainMenu();
         }
     }
 }
