@@ -125,6 +125,17 @@ namespace WpfApp1
                     {
                         startgameButton.IsEnabled = true;
                     }
+                    else
+                    {
+                        startgameButton.IsEnabled = false;
+                    }
+                }
+            }
+            else
+            {
+                if (myPlayer.IsHost)
+                {
+                    startgameButton.IsEnabled = false;
                 }
             }
         }
