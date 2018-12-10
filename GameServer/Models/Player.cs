@@ -27,7 +27,7 @@ namespace GameServer
 
             public GrenadeAdapter Grenade { get; set; }
 
-            public Weapon EquippedWeapon { get; set; }
+            public int EquippedWeaponID { get; set; }
 
             public bool ChangedStatus { get; set; }
 
@@ -50,7 +50,7 @@ namespace GameServer
             {
                 if (PrimaryWeapon != null)
                 {
-                    EquippedWeapon = PrimaryWeapon;
+                    EquippedWeaponID = PrimaryWeapon.Id;
                 }
             }
 
@@ -58,7 +58,7 @@ namespace GameServer
             {
                 if (SecondaryWeapon != null)
                 {
-                    EquippedWeapon = SecondaryWeapon;
+                    EquippedWeaponID = SecondaryWeapon.Id;
                 }
             }
 
@@ -67,7 +67,7 @@ namespace GameServer
                 if (PrimaryWeapon == null || PrimaryWeapon.Id < 0)
                 {
                     PrimaryWeapon = gun;
-                    gun.equip();
+                    equipPrimary();
                     return true;
                 }
 
@@ -79,7 +79,7 @@ namespace GameServer
                 if (SecondaryWeapon == null || SecondaryWeapon.Id < 0)
                 {
                     SecondaryWeapon = gun;
-                    gun.equip();
+                    equipSecondary();
                     return true;
                 }
 
@@ -91,7 +91,7 @@ namespace GameServer
                 if (Grenade == null)
                 {
                     Grenade = gun;
-                    gun.equip();
+                    //Equip grenade?
                     return true;
                 }
 
@@ -106,6 +106,14 @@ namespace GameServer
                 }
                 return true;
                 //TODO: add more equality checks
+            }
+
+            public Weapon GetEquippedWeapon()
+            {
+                if (PrimaryWeapon.Id == EquippedWeaponID) return PrimaryWeapon;
+                if (SecondaryWeapon.Id == EquippedWeaponID) return SecondaryWeapon;
+                if (Grenade.Id == EquippedWeaponID) return Grenade;
+                return null;
             }
 
         }

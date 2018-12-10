@@ -16,7 +16,6 @@ namespace GameServer.Controllers
     {
         private readonly PlayerContext _context;
 
-        private readonly GameContext _context2;
         public int Qty { get; set; } = 0;
 
         // GET: /<controller>/
@@ -58,7 +57,6 @@ namespace GameServer.Controllers
             _context.Players.Include(c => c.PrimaryWeapon).ToList();
             _context.Players.Include(c => c.SecondaryWeapon).ToList();
             _context.Players.Include(c => c.Grenade).ToList();
-            _context.Players.Include(c => c.EquippedWeapon).ToList();
             return _context.Players.ToList();
         }
 
@@ -89,7 +87,7 @@ namespace GameServer.Controllers
                 player.IsReady = false;
             }
 
-            player.SetFakeWeapons();
+            //player.SetFakeWeapons();
             _context.Players.Add(player);
             _context.SaveChanges();
             //return Ok(); //"created - ok"; 

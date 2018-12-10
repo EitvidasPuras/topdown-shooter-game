@@ -25,7 +25,7 @@ namespace GameServer
 
             public GrenadeAdapter Grenade { get; set; }
 
-            public Weapon EquippedWeapon { get; set; }
+            public int EquippedWeaponID { get; set; }
 
             public bool ChangedStatus { get; set; }
 
@@ -40,7 +40,7 @@ namespace GameServer
 			{
                 if (PrimaryWeapon != null)
                 {
-                    EquippedWeapon = PrimaryWeapon;
+                    EquippedWeaponID = PrimaryWeapon.Id;
                 }
 			}
 			
@@ -48,15 +48,23 @@ namespace GameServer
 			{
                 if (SecondaryWeapon != null)
                 {
-                    EquippedWeapon = SecondaryWeapon;
+                    EquippedWeaponID = SecondaryWeapon.Id;
                 }
             }
             public void equipGrenade()
 			{
                 if (Grenade != null)
                 {
-                    EquippedWeapon = Grenade;
+                    EquippedWeaponID = Grenade.Id;
                 }
+            }
+
+            public Weapon GetEquippedWeapon()
+            {
+                if (PrimaryWeapon.Id == EquippedWeaponID) return PrimaryWeapon;
+                if (SecondaryWeapon.Id == EquippedWeaponID) return SecondaryWeapon;
+                if (Grenade.Id == EquippedWeaponID) return Grenade;
+                return null;
             }
 
             public bool pickupPrimary(Primary gun)
@@ -64,7 +72,7 @@ namespace GameServer
                 if (PrimaryWeapon == null || PrimaryWeapon.Id < 0)
                 {
                     PrimaryWeapon = gun;
-                    gun.equip();
+                    equipPrimary();
                     return true;
                 }
 
@@ -72,30 +80,30 @@ namespace GameServer
             }
 
             public bool pickupSecondary(Secondary gun)
-			{
+            {
                 if (SecondaryWeapon == null || SecondaryWeapon.Id < 0)
                 {
                     SecondaryWeapon = gun;
-                    gun.equip();
+                    equipSecondary();
                     return true;
                 }
 
-			    return false;
-			}
+                return false;
+            }
 
             public bool pickupGrenade(GrenadeAdapter gun)
-			{
+            {
                 if (Grenade == null)
                 {
                     Grenade = gun;
-                    gun.equip();
+                    //Equip grenade?
                     return true;
                 }
 
-			    return false;
-			}
-			
-			public bool checkEquality(Player newData)
+                return false;
+            }
+
+            public bool checkEquality(Player newData)
 			{
                 if (this.PosX != newData.PosX || this.PosY != newData.PosY)
                 {
@@ -126,7 +134,7 @@ namespace GameServer
 
             public bool shoot(int x, int y, Player player)
             {
-                return EquippedWeapon.shoot(x, y, (int)this.PosX, (int)this.PosY, player);
+                return GetEquippedWeapon().shoot(x, y, (int)this.PosX, (int)this.PosY, player);
             }
 
             public override bool CheckIfHost()

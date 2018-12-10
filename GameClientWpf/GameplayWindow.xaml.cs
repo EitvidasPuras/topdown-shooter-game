@@ -167,7 +167,6 @@ namespace WpfApp1
             bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
             if (updated)
             {
-                //this.Invalidate();
                 playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
                 weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
 
@@ -262,30 +261,33 @@ namespace WpfApp1
 
         private async void CheckIfWeaponNearby()
         {
-            myPlayer = await requestController.GetPlayerAsync(url1);
+            ///myPlayer = await requestController.GetPlayerAsync(url1);
             foreach (var weapon in weaponsList)
             {
-                if (Math.Abs(weapon.PosX - myPlayer.PosX) <= 20 || Math.Abs(weapon.PosY - myPlayer.PosY) <= 20)
+                if (weapon.isOnTheGround)
                 {
-                    if (weapon is Primary)
+                    if (Math.Abs(weapon.PosX - myPlayer.PosX) <= 20 || Math.Abs(weapon.PosY - myPlayer.PosY) <= 20)
                     {
-                        if (myPlayer.pickupPrimary((Primary)weapon))
+                        if (weapon is Primary)
                         {
-                            await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                            if (myPlayer.pickupPrimary((Primary)weapon))
+                            {
+                                await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                            }
                         }
-                    }
-                    else if (weapon is Secondary)
-                    {
-                        if (myPlayer.pickupSecondary((Secondary)weapon))
+                        else if (weapon is Secondary)
                         {
-                            await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                            if (myPlayer.pickupSecondary((Secondary)weapon))
+                            {
+                                await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (myPlayer.pickupGrenade((GrenadeAdapter)weapon))
+                        else
                         {
-                            await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                            if (myPlayer.pickupGrenade((GrenadeAdapter)weapon))
+                            {
+                                await requestController.UpdateWeaponIsOnTheGroundStatusAsync(weapon, myPlayer);
+                            }
                         }
                     }
                 }

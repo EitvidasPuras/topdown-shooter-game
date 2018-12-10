@@ -140,48 +140,51 @@ namespace GameServer.Controllers
                 return NotFound();
             }
 
-            ww.IsOnTheGround = false;
-
-            _context.Weapons.Update(ww);
-            _context.SaveChanges();
-
-            var pp = _playerContext.Players.Find(pid);
-            if (pp == null)
+            if (ww.IsOnTheGround)
             {
-                return NotFound();
+                ww.IsOnTheGround = false;
+
+                _context.Weapons.Update(ww);
+                _context.SaveChanges();
+
+                var pp = _playerContext.Players.Find(pid);
+                if (pp == null)
+                {
+                    return NotFound();
+                }
+
+                if (ww is Primary)
+                {
+                    if (pp.pickupPrimary((Primary)ww))
+                    {
+                        _playerContext.Players.Update(pp);
+                        _playerContext.SaveChanges();
+                        return Ok();
+                    }
+                }
+                else if (ww is Secondary)
+                {
+                    if (pp.pickupSecondary((Secondary)ww))
+                    {
+                        _playerContext.Players.Update(pp);
+                        _playerContext.SaveChanges();
+                        return Ok();
+                    }
+                }
+                else
+                {
+                    if (pp.pickupGrenade((GrenadeAdapter)ww))
+                    {
+                        _playerContext.Players.Update(pp);
+                        _playerContext.SaveChanges();
+                        return Ok();
+                    }
+
+                }
+
+                _playerContext.Players.Update(pp);
+                _playerContext.SaveChanges();
             }
-
-            //if (ww is Primary)
-            //{
-            //    if (pp.pickupPrimary((Primary)ww))
-            //    {
-            //        _playerContext.Players.Update(pp);
-            //        _playerContext.SaveChanges();
-            //        return Ok();
-            //    }
-            //}
-            //else if (ww is Secondary)
-            //{
-            //    if (pp.pickupSecondary((Secondary)ww))
-            //    {
-            //        _playerContext.Players.Update(pp);
-            //        _playerContext.SaveChanges();
-            //        return Ok();
-            //    }
-            //}
-            //else
-            //{
-            //    if (pp.pickupGrenade((GrenadeAdapter)ww))
-            //    {
-            //        _playerContext.Players.Update(pp);
-            //        _playerContext.SaveChanges();
-            //        return Ok();
-            //    }
-
-            //}
-
-            _playerContext.Players.Update(pp);
-            _playerContext.SaveChanges();
 
             return Ok(); //NoContent();
         }
