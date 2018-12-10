@@ -58,6 +58,7 @@ namespace GameClientWpf
             {
                 Name = "Studentas-" + rnd.Next(10, 100),
                 Score = 100,
+                Health = 100,
                 PosX = rnd.Next(10, 800),
                 PosY = rnd.Next(10, 600)
             };
@@ -206,6 +207,23 @@ namespace GameClientWpf
             HttpResponseMessage response = await client.SendAsync(request);
             return response.StatusCode;
         }
+
+        public async Task<HttpStatusCode> ShootRequest(string path, int x, int y, int px, int py, long playerId)
+        {
+            List<int> parameters = new List<int>();
+            parameters.Add(x);
+            parameters.Add(y);
+            parameters.Add(px);
+            parameters.Add(py);
+            parameters.Add((int)playerId);
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+                "api/game/shoot", parameters);
+            response.EnsureSuccessStatusCode();
+
+            return response.StatusCode;
+        }
+
+
 
         public void getLogInformationAsync()
         {

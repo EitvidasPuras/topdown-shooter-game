@@ -144,6 +144,64 @@ namespace GameServer.Controllers
             
         }
 
+        // PUT api/game/shoot
+        [HttpPut("shoot")]
+        public IActionResult ShootMethod([FromBody] List<int> parameters)
+        {
+            int x = parameters[0];
+            int y = parameters[1];
+            int px = parameters[2];
+            int py = parameters[3];
+            long shooterId = (long)parameters[4];
+
+            List<int> posx = new List<int>();
+            List<int> posy = new List<int>();
+
+            int ydiff = y - py;
+            int xdiff = x - px;
+            double slope = (double)(y - py) / (x - px);
+            double xx, yy;
+            int number = (int)System.Math.Sqrt(ydiff * ydiff + xdiff * xdiff);
+            for (double i = 0; i < number; i++)
+            {
+                yy = slope == 0 ? 0 : ydiff * (i / number);
+                xx = slope == 0 ? xdiff * (i / number) : yy / slope;
+                posx.Add(((int)System.Math.Round(xx) + px));
+                posy.Add(((int)System.Math.Round(yy) + py));
+            }
+
+            posx.Add(x);
+            posy.Add(y);
+
+            for (int i = 0; i < posx.Count; i++)
+            {
+                foreach (var player in _playerContext.Players)
+                {
+                    if (player.PosX - 12 < posx[i] && posx[i] < player.PosX + 12 && player.Id != shooterId)
+                    {
+                        if (player.PosY - 12 < posy[i] && posy[i] < player.PosY + 12)
+                        {
+                            player.Health -= 50;
+                            if(player.Health <= 0)
+                            {
+                                foreach (Player contextplayer in _playerContext.Players)
+                                {
+                                    contextplayer.ChangedStatus = true;
+                                    _playerContext.Players.Update(contextplayer);
+                                }
+                            }
+                            _playerContext.Players.Update(player);
+                            _playerContext.SaveChanges();
+                            return Ok();
+                        }
+                    }
+                }
+                
+                i++;
+            }
+            return Ok();
+        }
+
         public bool AllPlayersReady()
         {
             foreach(Player player in _playerContext.Players)
@@ -155,6 +213,7 @@ namespace GameServer.Controllers
             }
             return true;
         }
+
     }
 }
 

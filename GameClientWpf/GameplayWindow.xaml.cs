@@ -174,7 +174,7 @@ namespace WpfApp1
                 foreach (Player p in playersList)
                 {
                     Player oldPlayer = listOfPlayers.Find(i => i.Id == p.Id);
-                    if (oldPlayer != null)
+                    if (oldPlayer != null && p.Health > 0)
                     {
                         if (!oldPlayer.checkEquality(p))
                         {
@@ -197,7 +197,20 @@ namespace WpfApp1
                             listOfPlayers[index] = p;
                         }
                     }
-                    else this.Form1_PaintPlayer(p);
+                    else
+                    {
+                        if(p.Id == myPlayer.Id && p.Health <= 0)
+                        {
+                            Application.Current.Shutdown();
+                        }
+
+                        Image img;
+                        if (UIPlayers.TryGetValue(oldPlayer.Id, out img))
+                        {
+                            img.RenderTransform = new TranslateTransform(-900,-900);
+                        }
+                        //this.Form1_PaintPlayer(p);
+                    }
                 }
 
 
@@ -280,19 +293,6 @@ namespace WpfApp1
 
         }
 
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            //Pen pen = new Pen(Color.Azure);
-            //formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
-        }
-
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //Pen pen = new Pen(Color.Black);
-            //formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
-            //this.Invalidate()
-        }
-
         private void UserControl_MouseMove(object sender, MouseEventArgs e)
         {
             if (laser != null)
@@ -324,6 +324,22 @@ namespace WpfApp1
             //    bbz.Children.Add(rotateTransform);
             //    img.RenderTransform = bbz;
             //}
+        }
+
+        private async void Form1_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            await requestController
+                  .ShootRequest(
+                        requestController.client.BaseAddress.PathAndQuery,
+                        (int)myPlayer.PosX,
+                        (int)myPlayer.PosY,
+                        (int)e.GetPosition(LayoutRoot).X,
+                        (int)e.GetPosition(LayoutRoot).Y,
+                        myPlayer.Id);
+
+            //Pen pen = new Pen(Color.Black);
+            //formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
+            //this.Invalidate()
         }
     }
 }
