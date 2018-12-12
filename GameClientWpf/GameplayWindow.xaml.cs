@@ -286,7 +286,8 @@ namespace WpfApp1
                     {
                         if(p.Id == myPlayer.Id && p.Health <= 0)
                         {
-                            Application.Current.Shutdown();
+                            Application.Current.MainWindow.Content = new DeathWindow();
+                            //Application.Current.Shutdown();
                         }
 
                         Image img;
@@ -297,6 +298,12 @@ namespace WpfApp1
                             if (oldPlayer.GetEquippedWeapon() != null && UIWeapons.TryGetValue(oldPlayer.GetEquippedWeapon().Id, out img))
                             {
                                 LayoutRoot.Children.Remove(img);
+                            }
+
+                            Label name;
+                            if(UIPlayerNames.TryGetValue(oldPlayer.Id, out name)){
+                                UIPlayerNames.Remove(oldPlayer.Id);
+                                LayoutRoot.Children.Remove(name);
                             }
                         }
                         //this.Form1_PaintPlayer(p);
@@ -319,28 +326,40 @@ namespace WpfApp1
             switch (e.Key)
             {
                 case Key.W:
-                    myPlayer.PosY -= 2;
-                    CheckIfWeaponNearby();
-                    moved = true;
-                    Form1_PaintPlayer(myPlayer);
+                    if (!CheckIfTouchesObstacle(myPlayer, 'w'))
+                    {
+                        myPlayer.PosY -= 2;
+                        CheckIfWeaponNearby();
+                        moved = true;
+                        Form1_PaintPlayer(myPlayer);
+                    }
                     break;
                 case Key.A:
-                    myPlayer.PosX -= 2;
-                    CheckIfWeaponNearby();
-                    moved = true;  
-                    Form1_PaintPlayer(myPlayer);
+                    if (!CheckIfTouchesObstacle(myPlayer, 'a'))
+                    {
+                        myPlayer.PosX -= 2;
+                        CheckIfWeaponNearby();
+                        moved = true;
+                        Form1_PaintPlayer(myPlayer);
+                    }
                     break;
                 case Key.S:
-                    myPlayer.PosY += 2;
-                    CheckIfWeaponNearby();
-                    moved = true;
-                    Form1_PaintPlayer(myPlayer);
+                    if (!CheckIfTouchesObstacle(myPlayer, 's'))
+                    {
+                        myPlayer.PosY += 2;
+                        CheckIfWeaponNearby();
+                        moved = true;
+                        Form1_PaintPlayer(myPlayer);
+                    }
                     break;
                 case Key.D:
-                    myPlayer.PosX += 2;
-                    CheckIfWeaponNearby();
-                    Form1_PaintPlayer(myPlayer);
-                    moved = true;
+                    if (!CheckIfTouchesObstacle(myPlayer, 'd'))
+                    {
+                        myPlayer.PosX += 2;
+                        CheckIfWeaponNearby();
+                        Form1_PaintPlayer(myPlayer);
+                        moved = true;
+                    }
                     break;
                 case Key.D1:
                     myPlayer.equipPrimary();
@@ -458,6 +477,39 @@ namespace WpfApp1
             laser.Stroke = whiteBrush;
             laser.RenderTransform = new TranslateTransform();
             laserTimer.Stop();
+        }
+
+        private bool CheckIfTouchesObstacle(Player player, char move)
+        {
+            long newPosX = player.PosX;
+            long newPosY = player.PosY;
+
+            switch (move)
+            {
+                case 'w':
+                    newPosY -= 2;
+                    break;
+                case 'a':
+                    newPosX -= 2;
+                    break;
+                case 's':
+                    newPosY += 2;
+                    break;
+                case 'd':
+                    newPosX += 2;
+                    break;
+            }
+            foreach (var obstacle in obstacleList)
+            {
+                if (obstacle.PosX - (obstacle.Width / 2) - 20 < newPosX && newPosX < obstacle.PosX + (obstacle.Width / 2) + 20)
+                {
+                    if (obstacle.PosY - (obstacle.Height / 2) - 10 < newPosY && newPosY < obstacle.PosY + (obstacle.Height / 2) + 10)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

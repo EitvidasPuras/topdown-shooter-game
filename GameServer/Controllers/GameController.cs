@@ -190,10 +190,22 @@ namespace GameServer.Controllers
             posx.Add(x);
             posy.Add(y);
 
+            posy.Reverse();
+            posx.Reverse();
             MainDamageCounter.EmptyDamageSum();
 
             for (int i = 0; i < posx.Count; i++)
             {
+                foreach(var obstacle in _obstacleContext.Obstacles)
+                {
+                    if (obstacle.PosX - (obstacle.Width / 2) < posx[i] && posx[i] < obstacle.PosX + (obstacle.Width / 2))
+                    {
+                        if (obstacle.PosY - (obstacle.Height / 2) < posy[i] && posy[i] < obstacle.PosY + (obstacle.Height / 2))
+                        {
+                            return information;
+                        }
+                    }
+                }
                 foreach (var player in _playerContext.Players)
                 {
                     if (player.PosX - 12 < posx[i] && posx[i] < player.PosX + 12 && player.Id != shooterId)
