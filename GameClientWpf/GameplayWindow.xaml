@@ -12,8 +12,25 @@
             <Grid.Background>
                 <ImageBrush ImageSource="/images/grasss.jpg" Stretch="UniformToFill"/>
             </Grid.Background>
+            <TextBlock x:Name="damageText" Margin="0" Text="0" Foreground="Red" Visibility="Hidden" Width="40" Height="40" FontSize="14" Panel.ZIndex="1" FontWeight="Bold">
+
+
+            </TextBlock>
 
         </Grid>
 
     </Grid>
+
+    <UserControl.Resources>
+        <Storyboard x:Key="PlayAnimation">
+            <DoubleAnimation
+            Storyboard.TargetName="damageText" 
+            Storyboard.TargetProperty="(TextBlock.Opacity)"
+            From="1.0" To="0.0" Duration="0:0:1" 
+            AutoReverse="False" 
+                />
+        </Storyboard>
+
+
+        </UserControl.Resources>
 </UserControl>

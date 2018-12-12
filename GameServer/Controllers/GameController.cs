@@ -128,28 +128,14 @@ namespace GameServer.Controllers
         {
             var game = _gameContext.Game.Find(1);
 
-
-
             if (_playerContext.Players.Count() < 1)
             {
                 game.IsMapReady = false;
                 game.Full = false;
                 game.IsMapStarted = false;
 
-                foreach (var weapon in _weaponContext.Weapons)
-                {
-                    _weaponContext.Weapons.Remove(weapon);
-                }
-
-                foreach (var obstacles in _obstacleContext.Obstacles)
-                {
-                    _obstacleContext.Obstacles.Remove(obstacles);
-                }
-
-                foreach (var rectangles in _obstacleContext.Rectangles)
-                {
-                    _obstacleContext.Rectangles.Remove(rectangles);
-                }
+                _weaponContext.Weapons.RemoveRange(_weaponContext.Weapons);
+                _obstacleContext.Obstacles.RemoveRange(_obstacleContext.Obstacles);
 
                 _gameContext.Game.Update(game);
                 _gameContext.SaveChanges();

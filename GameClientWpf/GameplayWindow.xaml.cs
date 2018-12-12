@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -22,13 +23,11 @@ namespace WpfApp1
         Player myPlayer;
         RequestsController requestController = new RequestsController();
         Line laser;
-        Label damageText = new Label();
+
         SolidColorBrush darkBrush = new SolidColorBrush();
         SolidColorBrush whiteBrush = new SolidColorBrush();
 
-        System.Windows.Threading.DispatcherTimer labelTimer = new System.Windows.Threading.DispatcherTimer();
         System.Windows.Threading.DispatcherTimer laserTimer = new System.Windows.Threading.DispatcherTimer();
-
 
         public GameplayWindow(Player myPlayer, string url)
         {
@@ -114,23 +113,10 @@ namespace WpfApp1
             // Add line to the Grid.  
             LayoutRoot.Children.Add(laser);
 
-            //Add text to the grid
-            damageText.Width = 40;
-            damageText.Height = 40;
-            damageText.FontSize = 14;
-            damageText.FontFamily = new FontFamily("Consolas");
-            damageText.Foreground = Brushes.Red;
-            LayoutRoot.Children.Add(damageText);
-
-
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += timer1_TickAsync;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 300);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 150);
             dispatcherTimer.Start();
-        
-
-            labelTimer.Tick += damageLabelTimer;
-            labelTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
 
             laserTimer.Tick += laserColorTimer;
             laserTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
@@ -234,7 +220,10 @@ namespace WpfApp1
                     {
                         if (p.GetEquippedWeapon() != null && p.GetEquippedWeapon().Id == weapon.Id)
                         {
-                            img.RenderTransform = new TranslateTransform(p.PosX - 400, p.PosY - 300 - 10);
+                            if (p.Id == myPlayer.Id)
+                                img.RenderTransform = new TranslateTransform(myPlayer.PosX - 400, myPlayer.PosY - 300 - 10);
+                            else
+                                img.RenderTransform = new TranslateTransform(p.PosX - 400, p.PosY - 300 - 10);
                             visible = true;
                             img.Visibility = Visibility.Visible;
                             break;
@@ -252,20 +241,10 @@ namespace WpfApp1
                     else
                     {
                         img.Visibility = Visibility.Hidden;
-                        img.RenderTransform = new TranslateTransform(8000,  8800);
                     }
                 }
             }
         }
-
-        //deletint playeri?
-        //private async void Form1_FormClosingAsync(object sender, FormClosingEventArgs e)
-        //{
-        //    //Delete the player
-        //    //Console.WriteLine("4.3)\tDelete the player");
-        //    //var statusCode = await requestController.DeletePlayerAsync(myPlayer.Id);
-        //    //Console.WriteLine($"Deleted (HTTP Status = {(int)statusCode})");
-        //}
 
         //timeris getina visus playerius ir atvaizduoja pagal koordinates
         private async void timer1_TickAsync(object sender, EventArgs e)
@@ -292,19 +271,12 @@ namespace WpfApp1
                             if (p.Id == myPlayer.Id)
                             {
                                 myPlayer = p;
-                                //Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
-                                //formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
-
-                                this.Form1_PaintPlayer(p);
-                                
                             }
                             else
                             {
-                                //Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
-                                //formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
-
                                 this.Form1_PaintPlayer(p);
                             }
+                            
 
                             int index = listOfPlayers.FindIndex(i => i.Id == p.Id);
                             listOfPlayers[index] = p;
@@ -341,39 +313,31 @@ namespace WpfApp1
         }
 
         //reaguoja į paspaustus mygtukus
-        private async void Window_KeyDown(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            //atnaujina kliento objektą iš duombazes
-           // myPlayer = await requestController.GetPlayerAsync(url1);
-            Coordinates coordinates = new Coordinates
-            {
-                Id = myPlayer.Id,
-                PosX = myPlayer.PosX,
-                PosY = myPlayer.PosY
-            };
-
+            
             switch (e.Key)
             {
                 case Key.W:
-                    myPlayer.PosY -= 15;
+                    myPlayer.PosY -= 2;
                     CheckIfWeaponNearby();
                     moved = true;
                     Form1_PaintPlayer(myPlayer);
                     break;
                 case Key.A:
-                    myPlayer.PosX -= 15;
+                    myPlayer.PosX -= 2;
                     CheckIfWeaponNearby();
-                    moved = true;
+                    moved = true;  
                     Form1_PaintPlayer(myPlayer);
                     break;
                 case Key.S:
-                    myPlayer.PosY += 15;
+                    myPlayer.PosY += 2;
                     CheckIfWeaponNearby();
                     moved = true;
                     Form1_PaintPlayer(myPlayer);
                     break;
                 case Key.D:
-                    myPlayer.PosX += 15;
+                    myPlayer.PosX += 2;
                     CheckIfWeaponNearby();
                     Form1_PaintPlayer(myPlayer);
                     moved = true;
@@ -478,10 +442,14 @@ namespace WpfApp1
                         myPlayer.Id);
             if ((int)damageDone.damage > 0)
             {
-                damageText.Content = (string)damageDone.damage;
+                damageText.Text = (string)damageDone.damage;
                 damageText.RenderTransform = new TranslateTransform((int)damageDone.x - 400, (int)damageDone.y - 300);
-                labelTimer.Stop();
-                labelTimer.Start();
+                damageText.Visibility = Visibility.Visible;
+
+
+                Storyboard sb = this.FindResource("PlayAnimation") as Storyboard;
+                Storyboard.SetTarget(sb, this.damageText);
+                sb.Begin();
             }
         }
 
@@ -490,12 +458,6 @@ namespace WpfApp1
             laser.Stroke = whiteBrush;
             laser.RenderTransform = new TranslateTransform();
             laserTimer.Stop();
-        }
-
-        private async void damageLabelTimer(object sender, EventArgs e)
-        {
-            damageText.RenderTransform = new TranslateTransform(-600, -600);
-            labelTimer.Stop();
         }
     }
 }
