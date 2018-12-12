@@ -4,10 +4,9 @@
 
 namespace GameServer.Models
 {
-	public abstract class Implementor
+	public class Implementor
 	{
-		public abstract void react( Player player );
-		
+        public void react(Player player) { }
 	}
 	
 }

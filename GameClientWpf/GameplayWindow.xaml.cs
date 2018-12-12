@@ -34,7 +34,8 @@ namespace WpfApp1
 
         string url1 = "";
         List<GameServer.Models.Player> listOfPlayers = new List<GameServer.Models.Player>();
-        List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
+        //List<GameServer.Models.Weapon> listOfWeapons = new List<GameServer.Models.Weapon>();
+        ICollection<Obstacle> obstacleList;
         ICollection<Weapon> weaponsList;
         ICollection<Player> playersList;
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
@@ -52,6 +53,8 @@ namespace WpfApp1
 
             playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
             weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
+            obstacleList = await requestController.GetAllObstacleAsync(requestController.client.BaseAddress.PathAndQuery);
+
 
             foreach (Weapon w in weaponsList)
             {
@@ -65,6 +68,26 @@ namespace WpfApp1
             {
                 listOfPlayers.Add(p);
                 Form1_PaintPlayer(p);
+            }
+
+            foreach (Obstacle o in obstacleList)
+            {
+                Shape obst = null;
+                if (o is GameServer.Models.Circle)
+                {
+                    obst = new System.Windows.Shapes.Ellipse();     
+                }
+                else if (o is GameServer.Models.Rectangle)
+                {
+                    obst = new System.Windows.Shapes.Rectangle();
+                }
+                obst.Stroke = Brushes.Blue;
+                obst.StrokeThickness = 2;
+                obst.RenderTransform = new TranslateTransform(o.PosX - 400, o.PosY - 300);
+                obst.Fill = new SolidColorBrush(Colors.DarkGreen);
+                obst.Width = o.Width;
+                obst.Height = o.Height;
+                LayoutRoot.Children.Add(obst);
             }
 
             // Create a Line  
@@ -138,7 +161,7 @@ namespace WpfApp1
         private void Form1_PaintWeapons(Weapon weapon)
         {
             Image img = new Image();
-
+            
             LayoutRoot.Children.Add(img);
             if (weapon.Name.Contains("AK47"))
             {

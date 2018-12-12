@@ -89,6 +89,22 @@ namespace GameClientWpf
             return players;
         }
 
+        public async Task<ICollection<Obstacle>> GetAllObstacleAsync(string path)
+        {
+            List<Obstacle> obstacles = new List<Obstacle>();
+            HttpResponseMessage response = await client.GetAsync(path + "api/obstacle/circle");
+            if (response.IsSuccessStatusCode)
+            {
+                obstacles.AddRange(await response.Content.ReadAsAsync<ICollection<Circle>>());
+            }
+            response = await client.GetAsync(path + "api/obstacle/rectangle");
+            if (response.IsSuccessStatusCode)
+            {
+                obstacles.AddRange(await response.Content.ReadAsAsync<ICollection<Rectangle>>());
+            }
+            return obstacles;
+        }
+
         public async Task<ICollection<Weapon>> GetAllWeaponsAsync(string path)
         {
             ICollection<object> weps = null;

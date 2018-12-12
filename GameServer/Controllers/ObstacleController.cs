@@ -29,6 +29,18 @@ namespace GameServer.Controllers
                 .ToList();
         }
 
+        [HttpGet("Circle")]
+        public IEnumerable<Circle> GetCircles()
+        {
+            return _context.Circles.ToList();
+        }
+
+        [HttpGet("Rectangle")]
+        public IEnumerable<Rectangle> GetRectangles()
+        {
+            return _context.Rectangles.ToList();
+        }
+
         [HttpGet("{id}/react")]
         public ActionResult<string> react([FromRoute] int id)
         {

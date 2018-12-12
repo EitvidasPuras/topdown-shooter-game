@@ -8,10 +8,10 @@ namespace GameServer.Models
 {
 	public class DangerousImplementor : Implementor
 	{
-		public override void react(Player player)
-		{
-            player.Health = player.Health - 10;
-		}
+		//public override void react(Player player)
+		//{
+  //          player.Health = player.Health - 10;
+		//}
 		
 	}
 	
