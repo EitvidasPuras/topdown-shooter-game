@@ -35,6 +35,7 @@ namespace WpfApp1
         ICollection<Weapon> weaponsList;
         ICollection<Player> playersList;
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
+        bool moved = false;
 
         Dictionary<long, Image> UIPlayers = new Dictionary<long, Image>();
         Dictionary<long, Image> UIWeapons = new Dictionary<long, Image>();
@@ -51,7 +52,7 @@ namespace WpfApp1
 
             foreach (Weapon w in weaponsList)
             {
-                this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
+                Form1_PaintWeapons(w);
             }
 
             Random rnd = new Random();
@@ -60,7 +61,7 @@ namespace WpfApp1
             foreach (Player p in playersList)
             {
                 listOfPlayers.Add(p);
-                this.Form1_PaintPlayer(p);
+                Form1_PaintPlayer(p);
             }
 
             // Create a Line  
@@ -89,16 +90,11 @@ namespace WpfApp1
             Focus();
         }
 
-        // paint dot
-        private void Form1_PaintPlayer(Player player)//int x, int y)
+        private void Form1_PaintPlayer(Player player)
         {
-            //Image image = Image.FromFile(@"..\\..\\assets\\basicPlayer.png");
-            //formGraphics.DrawImage(image, x, y);
-            //formGraphics.DrawImage()
             Image img;
             if (UIPlayers.TryGetValue(player.Id, out img))
             {
-                Player oldPlayer = listOfPlayers.Find(i => i.Id == player.Id);
                 img.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 300);
             }
             else
@@ -110,44 +106,81 @@ namespace WpfApp1
                 img.Height = 50;
                 UIPlayers.Add(player.Id, img);
                 img.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 300);
-                //Player oldPlayer = listOfPlayers.Find(i => i.Id == player.Id);
-                //
+            }
+            if (player.GetEquippedWeapon() != null)
+            {
+                UpdateWeaponPos(player.GetEquippedWeapon());
             }
         }
 
-        private void Form1_PaintWeapons(int x, int y, string weaponName)
+        private void Form1_PaintWeapons(Weapon weapon)
         {
             Image img = new Image();
+
             LayoutRoot.Children.Add(img);
-            if (weaponName.Contains("AK47"))
+            if (weapon.Name.Contains("AK47"))
             {
                 img.Source = new BitmapImage(new Uri("/images/ak47.png", UriKind.Relative));
-                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
-            else if (weaponName.Contains("M4A1"))
+            else if (weapon.Name.Contains("M4A1"))
             {
                 img.Source = new BitmapImage(new Uri("/images/m4a1.png", UriKind.Relative));
-                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
-            else if (weaponName.Contains("DesertEagle"))
+            else if (weapon.Name.Contains("DesertEagle"))
             {
                 img.Source = new BitmapImage(new Uri("/images/deserteagle.png", UriKind.Relative));
-                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
-            else if (weaponName.Contains("P250"))
+            else if (weapon.Name.Contains("P250"))
             {
                 img.Source = new BitmapImage(new Uri("/images/p250.png", UriKind.Relative));
-                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
             }
-            else if (weaponName.Contains("Grenade"))
+            else if (weapon.Name.Contains("Grenade"))
             {
                 img.Source = new BitmapImage(new Uri("/images/grenade.png", UriKind.Relative));
-                img.Margin = new Thickness(x-400, y-300, 0, 0);
                 img.Height = 15;
+            }
+            img.Margin = new Thickness(0, 0, 0, 0);
+            img.RenderTransform = new TranslateTransform(weapon.PosX - 400, weapon.PosY - 300);
+            UIWeapons.Add(weapon.Id, img);
+        }
+
+        private void UpdateWeaponPos(Weapon weapon)
+        {
+            Image img;
+            if (UIWeapons.TryGetValue(weapon.Id, out img))
+            {
+                bool visible = false;
+                if (!weapon.isOnTheGround)
+                {
+                    foreach (Player p in playersList)
+                    {
+                        if (p.GetEquippedWeapon() != null && p.GetEquippedWeapon().Id == weapon.Id)
+                        {
+                            img.RenderTransform = new TranslateTransform(p.PosX - 400, p.PosY - 300 - 10);
+                            visible = true;
+                            img.Visibility = Visibility.Visible;
+                            break;
+                        }
+                    }
+                }
+                if (!visible)
+                {
+                    visible = weapon.isOnTheGround;
+                    if (visible)
+                    {
+                        img.Visibility = Visibility.Visible;
+                        img.RenderTransform = new TranslateTransform(weapon.PosX - 400, weapon.PosY - 300);
+                    }
+                    else
+                    {
+                        img.Visibility = Visibility.Hidden;
+                        img.RenderTransform = new TranslateTransform(8000,  8800);
+                    }
+                }
             }
         }
 
@@ -163,6 +196,11 @@ namespace WpfApp1
         //timeris getina visus playerius ir atvaizduoja pagal koordinates
         private async void timer1_TickAsync(object sender, EventArgs e)
         {
+            if (moved)
+            {
+                var patchStatusCode = await requestController.UpdatePlayerAsync(myPlayer);
+                moved = false;
+            }
 
             bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
             if (updated)
@@ -179,6 +217,7 @@ namespace WpfApp1
                         {
                             if (p.Id == myPlayer.Id)
                             {
+                                myPlayer = p;
                                 //Image image = Image.FromFile(@"..\\..\\assets\\empty.png");
                                 //formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
 
@@ -206,55 +245,75 @@ namespace WpfApp1
                         Image img;
                         if (UIPlayers.TryGetValue(oldPlayer.Id, out img))
                         {
-                            img.RenderTransform = new TranslateTransform(-900,-900);
+                            //img.RenderTransform = new TranslateTransform(-900,-900);
+                            LayoutRoot.Children.Remove(img);
+                            if (oldPlayer.GetEquippedWeapon() != null && UIWeapons.TryGetValue(oldPlayer.GetEquippedWeapon().Id, out img))
+                            {
+                                LayoutRoot.Children.Remove(img);
+                            }
                         }
                         //this.Form1_PaintPlayer(p);
                     }
                 }
-
-
                 foreach (Weapon w in weaponsList)
                 {
-                    //reik atnaujint weapon piešimą
-                    //this.Form1_PaintWeapons((int)w.PosX, (int)w.PosY, w.Name);
+                   // if (w.isOnTheGround)
+                        UpdateWeaponPos(w);
                 }
             }
+
+
         }
 
         //reaguoja į paspaustus mygtukus
         private async void Window_KeyDown(object sender, KeyEventArgs e)
         {
             //atnaujina kliento objektą iš duombazes
-            myPlayer = await requestController.GetPlayerAsync(url1);
+           // myPlayer = await requestController.GetPlayerAsync(url1);
             Coordinates coordinates = new Coordinates
             {
                 Id = myPlayer.Id,
                 PosX = myPlayer.PosX,
                 PosY = myPlayer.PosY
             };
-            var patchStatusCode = (Object)null;
 
             switch (e.Key)
             {
                 case Key.W:
-                    coordinates.PosY -= 15;
-                    patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    myPlayer.PosY -= 15;
                     CheckIfWeaponNearby();
+                    moved = true;
+                    Form1_PaintPlayer(myPlayer);
                     break;
                 case Key.A:
-                    coordinates.PosX -= 15;
-                    patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    myPlayer.PosX -= 15;
                     CheckIfWeaponNearby();
+                    moved = true;
+                    Form1_PaintPlayer(myPlayer);
                     break;
                 case Key.S:
-                    coordinates.PosY += 15;
-                    patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    myPlayer.PosY += 15;
                     CheckIfWeaponNearby();
+                    moved = true;
+                    Form1_PaintPlayer(myPlayer);
                     break;
                 case Key.D:
-                    coordinates.PosX += 15;
-                    patchStatusCode = await requestController.PatchPlayerAsync(coordinates);
+                    myPlayer.PosX += 15;
                     CheckIfWeaponNearby();
+                    Form1_PaintPlayer(myPlayer);
+                    moved = true;
+                    break;
+                case Key.D1:
+                    myPlayer.equipPrimary();
+                    moved = true;
+                    break;
+                case Key.D2:
+                    myPlayer.equipSecondary();
+                    moved = true;
+                    break;
+                case Key.D3:
+                    myPlayer.equipGrenade();
+                    moved = true;
                     break;
             }
         }

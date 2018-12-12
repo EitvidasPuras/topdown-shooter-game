@@ -66,6 +66,7 @@ namespace GameServer
             {
                 if (PrimaryWeapon == null || PrimaryWeapon.Id < 0)
                 {
+                    gun.IsOnTheGround = false;
                     PrimaryWeapon = gun;
                     equipPrimary();
                     return true;
@@ -78,6 +79,7 @@ namespace GameServer
             {
                 if (SecondaryWeapon == null || SecondaryWeapon.Id < 0)
                 {
+                    gun.IsOnTheGround = false;
                     SecondaryWeapon = gun;
                     equipSecondary();
                     return true;
@@ -90,6 +92,7 @@ namespace GameServer
             {
                 if (Grenade == null)
                 {
+                    gun.IsOnTheGround = false;
                     Grenade = gun;
                     //Equip grenade?
                     return true;

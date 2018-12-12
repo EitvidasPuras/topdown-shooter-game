@@ -109,6 +109,11 @@ namespace GameServer.Controllers
             pp.PosX = p.PosX;
             pp.PosY = p.PosY;
             pp.Score = p.Score;
+            foreach (Player contextplayer in _context.Players)
+            {
+                contextplayer.ChangedStatus = true;
+                _context.Players.Update(contextplayer);
+            }
 
             _context.Players.Update(pp);
             _context.SaveChanges();

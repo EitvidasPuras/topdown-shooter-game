@@ -142,11 +142,12 @@ namespace GameServer.Controllers
 
             if (ww.IsOnTheGround)
             {
-                ww.IsOnTheGround = false;
+                //_context.Weapons.Update(ww);
+                //_context.SaveChanges();
 
-                _context.Weapons.Update(ww);
-                _context.SaveChanges();
-
+                _playerContext.Players.Include(c => c.PrimaryWeapon).ToList();
+                _playerContext.Players.Include(c => c.SecondaryWeapon).ToList();
+                _playerContext.Players.Include(c => c.Grenade).ToList();
                 var pp = _playerContext.Players.Find(pid);
                 if (pp == null)
                 {
@@ -155,33 +156,19 @@ namespace GameServer.Controllers
 
                 if (ww is Primary)
                 {
-                    if (pp.pickupPrimary((Primary)ww))
-                    {
-                        _playerContext.Players.Update(pp);
-                        _playerContext.SaveChanges();
-                        return Ok();
-                    }
+                    pp.pickupPrimary((Primary)ww);
                 }
                 else if (ww is Secondary)
                 {
-                    if (pp.pickupSecondary((Secondary)ww))
-                    {
-                        _playerContext.Players.Update(pp);
-                        _playerContext.SaveChanges();
-                        return Ok();
-                    }
+                    pp.pickupSecondary((Secondary)ww);
                 }
                 else
                 {
-                    if (pp.pickupGrenade((GrenadeAdapter)ww))
-                    {
-                        _playerContext.Players.Update(pp);
-                        _playerContext.SaveChanges();
-                        return Ok();
-                    }
-
+                    pp.pickupGrenade((GrenadeAdapter)ww);
                 }
 
+                _context.Weapons.Update(ww);
+                _context.SaveChanges();
                 _playerContext.Players.Update(pp);
                 _playerContext.SaveChanges();
             }

@@ -61,9 +61,9 @@ namespace GameServer
 
             public Weapon GetEquippedWeapon()
             {
-                if (PrimaryWeapon.Id == EquippedWeaponID) return PrimaryWeapon;
-                if (SecondaryWeapon.Id == EquippedWeaponID) return SecondaryWeapon;
-                if (Grenade.Id == EquippedWeaponID) return Grenade;
+                if (PrimaryWeapon != null && PrimaryWeapon.Id == EquippedWeaponID) return PrimaryWeapon;
+                if (SecondaryWeapon != null && SecondaryWeapon.Id == EquippedWeaponID) return SecondaryWeapon;
+                if (Grenade != null && Grenade.Id == EquippedWeaponID) return Grenade;
                 return null;
             }
 
