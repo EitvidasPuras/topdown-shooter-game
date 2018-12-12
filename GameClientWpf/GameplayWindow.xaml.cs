@@ -23,7 +23,12 @@ namespace WpfApp1
         RequestsController requestController = new RequestsController();
         Line laser;
         Label damageText = new Label();
+        SolidColorBrush darkBrush = new SolidColorBrush();
+        SolidColorBrush whiteBrush = new SolidColorBrush();
+
         System.Windows.Threading.DispatcherTimer labelTimer = new System.Windows.Threading.DispatcherTimer();
+        System.Windows.Threading.DispatcherTimer laserTimer = new System.Windows.Threading.DispatcherTimer();
+
 
         public GameplayWindow(Player myPlayer, string url)
         {
@@ -43,12 +48,14 @@ namespace WpfApp1
 
         Dictionary<long, Image> UIPlayers = new Dictionary<long, Image>();
         Dictionary<long, Image> UIWeapons = new Dictionary<long, Image>();
+        Dictionary<long, Label> UIPlayerNames = new Dictionary<long, Label>();
 
         ObserverController observer = new ObserverController();
 
         // pagetina visus playerius ir juos atvaizduoja, vėliau sukuria playeri esančiam klientui
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
             Console.WriteLine("0)\tGet all player");
 
             playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
@@ -97,9 +104,8 @@ namespace WpfApp1
             laser.X2 = 200;
             laser.Y2 = 200;
 
-            // Create a red Brush  
-            SolidColorBrush whiteBrush = new SolidColorBrush();
             whiteBrush.Color = Colors.GhostWhite;
+            darkBrush.Color = Colors.Black;
 
             // Set Line's width and color  
             laser.StrokeThickness = 1;
@@ -121,19 +127,26 @@ namespace WpfApp1
             dispatcherTimer.Tick += timer1_TickAsync;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 300);
             dispatcherTimer.Start();
-            Focus();
+        
 
             labelTimer.Tick += damageLabelTimer;
-            labelTimer.Interval = new TimeSpan(0, 0, 0, 0, 1500);
+            labelTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
 
+            laserTimer.Tick += laserColorTimer;
+            laserTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
+
+            Focus();
         }
 
         private void Form1_PaintPlayer(Player player)
         {
             Image img;
-            if (UIPlayers.TryGetValue(player.Id, out img))
+            Label playerName = null;
+            if (UIPlayers.TryGetValue(player.Id, out img)
+                && UIPlayerNames.TryGetValue(player.Id, out playerName))
             {
                 img.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 300);
+                playerName.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 320);
             }
             else
             {
@@ -143,6 +156,10 @@ namespace WpfApp1
                 img.Margin = new Thickness(0, 0, 0, 0);
                 img.Height = 50;
                 UIPlayers.Add(player.Id, img);
+                playerName = CreateNameLabel(player.Name);
+                UIPlayerNames.Add(player.Id, playerName);
+                LayoutRoot.Children.Add(playerName);
+                playerName.RenderTransform = new TranslateTransform((int)player.PosX - 400, (int)player.PosY - 320);
                 img.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 300);
             }
             if (player.GetEquippedWeapon() != null)
@@ -156,6 +173,18 @@ namespace WpfApp1
                 laser.Y1 = player.PosY;
                 laser.RenderTransform = new TranslateTransform();
             }
+        }
+
+        private Label CreateNameLabel(string name)
+        {
+            Label label = new Label();
+            label.Width = 100;
+            label.Height = 30;
+            label.FontSize = 10;
+            label.Content = name;
+            label.FontFamily = new FontFamily("Consolas");
+            label.Foreground = Brushes.Black;
+            return label;
         }
 
         private void Form1_PaintWeapons(Weapon weapon)
@@ -435,6 +464,10 @@ namespace WpfApp1
 
         private async void Form1_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            laser.Stroke = darkBrush;
+            laserTimer.Stop();
+            laserTimer.Start();
+
             dynamic damageDone = await requestController
                   .ShootRequest(
                         requestController.client.BaseAddress.PathAndQuery,
@@ -450,6 +483,13 @@ namespace WpfApp1
                 labelTimer.Stop();
                 labelTimer.Start();
             }
+        }
+
+        private void laserColorTimer(object sender, EventArgs e)
+        {
+            laser.Stroke = whiteBrush;
+            laser.RenderTransform = new TranslateTransform();
+            laserTimer.Stop();
         }
 
         private async void damageLabelTimer(object sender, EventArgs e)

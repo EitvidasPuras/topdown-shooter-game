@@ -25,9 +25,20 @@ namespace WpfApp1
             InitializeComponent();
         }
 
+
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-           Application.Current.MainWindow.Content = new LobbyWindow();
+            if(CustomNickname.Text.Length <= 0)
+            {
+                ErrorLabel.Visibility = Visibility.Visible;
+                ErrorLabel.Foreground = Brushes.DarkRed;
+                ErrorLabel.Content = "Please type in a nickname";
+            }
+            else
+            {
+                Application.Current.MainWindow.Content = new LobbyWindow(CustomNickname.Text);
+            }
         }
     }
 }

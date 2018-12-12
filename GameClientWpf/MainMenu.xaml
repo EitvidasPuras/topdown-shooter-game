@@ -14,6 +14,9 @@
             </LinearGradientBrush>
         </Grid.Background>
         <Button Content="JOIN LOBBY" HorizontalAlignment="Center" Margin="0,0,-6,0" VerticalAlignment="Center" Width="245" Height="98" Click="Button_Click"/>
+        <TextBox MaxLength="10" x:Name="CustomNickname" HorizontalAlignment="Left" Height="23" Margin="280,0,0,113" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="246"/>
+        <Label Content="Custom nickname" HorizontalAlignment="Left" Margin="170,0,0,113" VerticalAlignment="Bottom"/>
+        <Label x:Name="ErrorLabel" Visibility="Hidden" Content="Label" HorizontalAlignment="Left" Margin="377,0,0,82" VerticalAlignment="Bottom"/>
 
     </Grid>
 </UserControl>

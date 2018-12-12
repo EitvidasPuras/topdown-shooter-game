@@ -26,9 +26,11 @@ namespace WpfApp1
         RequestsController requestController = new RequestsController();
         Player myPlayer;
         Uri url;
+        string customName;
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-        public LobbyWindow()
+        public LobbyWindow(string customName)
         {
+            this.customName = customName;
             InitializeComponent();
             Focus();
         }
@@ -37,7 +39,7 @@ namespace WpfApp1
         {
             if(!await requestController.GameIsStarted(requestController.client.BaseAddress.PathAndQuery))
             {
-                url = await requestController.JoinGame();
+                url = await requestController.JoinGame(customName);
                 myPlayer = await requestController.GetPlayerAsync(url.PathAndQuery);
                 myPlayer.SetPlayerTemplate(myPlayer);
                 if (myPlayer.IsHost)
@@ -45,6 +47,7 @@ namespace WpfApp1
                     startgameButton.Visibility = Visibility.Visible;
                     startgameButton.IsEnabled = false;
                     backgameButton.IsEnabled = false;
+                    backgameButton.Visibility = Visibility.Hidden;
                 }
                 (Application.Current.MainWindow as MainWindow).MyPlayer = myPlayer;
 

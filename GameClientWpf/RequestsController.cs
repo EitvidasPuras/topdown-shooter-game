@@ -50,13 +50,13 @@ namespace GameClientWpf
             return response.Headers.Location;
         }
 
-        public async Task<Uri> JoinGame()
+        public async Task<Uri> JoinGame(string customName)
         {
             Random rnd = new Random();
 
             Player player = new Player
             {
-                Name = "Studentas-" + rnd.Next(10, 100),
+                Name = customName,
                 Score = 100,
                 Health = 100,
                 PosX = rnd.Next(10, 800),
