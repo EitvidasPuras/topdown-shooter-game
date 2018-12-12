@@ -105,10 +105,11 @@ namespace GameServer.Controllers
                 return NotFound();
             }
 
-            pp.Name = p.Name;
             pp.PosX = p.PosX;
             pp.PosY = p.PosY;
             pp.Score = p.Score;
+            pp.EquippedWeaponID = p.EquippedWeaponID;
+
             foreach (Player contextplayer in _context.Players)
             {
                 contextplayer.ChangedStatus = true;

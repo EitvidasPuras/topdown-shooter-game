@@ -258,8 +258,8 @@ namespace WpfApp1
             bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
             if (updated)
             {
-                playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
                 weaponsList = await requestController.GetAllWeaponsAsync(requestController.client.BaseAddress.PathAndQuery);
+                playersList = await requestController.GetAllPlayerAsync(requestController.client.BaseAddress.PathAndQuery);
 
                 foreach (Player p in playersList)
                 {
@@ -364,7 +364,7 @@ namespace WpfApp1
             {
                 if (weapon.isOnTheGround)
                 {
-                    if (Math.Abs(weapon.PosX - myPlayer.PosX) <= 20 || Math.Abs(weapon.PosY - myPlayer.PosY) <= 20)
+                    if (Math.Abs(weapon.PosX - myPlayer.PosX) <= 20 && Math.Abs(weapon.PosY - myPlayer.PosY) <= 20)
                     {
                         if (weapon is Primary)
                         {
