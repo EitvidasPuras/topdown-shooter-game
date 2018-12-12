@@ -213,7 +213,7 @@ namespace GameClientWpf
             return response.StatusCode;
         }
 
-        public async Task<HttpStatusCode> ShootRequest(string path, int x, int y, int px, int py, long playerId)
+        public async Task<Object> ShootRequest(string path, int x, int y, int px, int py, long playerId)
         {
             List<int> parameters = new List<int>();
             parameters.Add(x);
@@ -225,7 +225,10 @@ namespace GameClientWpf
                 "api/game/shoot", parameters);
             response.EnsureSuccessStatusCode();
 
-            return response.StatusCode;
+            var information = await response.Content.ReadAsAsync<Object>();
+
+            return information;
+            //return response.StatusCode;
         }
 
 

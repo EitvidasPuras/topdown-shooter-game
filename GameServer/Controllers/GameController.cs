@@ -17,6 +17,14 @@ namespace GameServer.Controllers
         private readonly PlayerContext _playerContext;
         private readonly ObstacleContext _obstacleContext;
         private readonly WeaponContext _weaponContext;
+
+        private DamageCounter Counter1;
+        private DamageCounter Counter2;
+        private DamageCounter Counter3;
+        private DamageCounter Counter4;
+        private DamageCounter EmptyCounter;
+        private DamageCounter MainDamageCounter;
+
         public int Qty { get; set; } = 0;
         public int maxPlayers = 2;
         //private bool mapIsBeingGenerated = false;
@@ -25,6 +33,21 @@ namespace GameServer.Controllers
 
         public GameController(GameContext game, PlayerContext context, ObstacleContext obstacle, WeaponContext weapon)
         {
+            Counter1 = new Counter(3, 50);
+            Counter2 = new Counter(6, 30);
+            Counter3 = new Counter(9, 25);
+            Counter4 = new Counter(12, 20);
+            EmptyCounter = new EmptyCounter();
+
+            Counter1.SetNextChain(Counter2);
+            Counter2.SetNextChain(Counter3);
+            Counter3.SetNextChain(Counter4);
+            Counter4.SetNextChain(EmptyCounter);
+            EmptyCounter.SetNextChain(null);
+
+            MainDamageCounter = Counter1;
+
+
             _gameContext = game;
             _playerContext = context;
             _obstacleContext = obstacle;
@@ -37,6 +60,7 @@ namespace GameServer.Controllers
                 _gameContext.Add(g);
                 _gameContext.SaveChanges();
             }
+
         }
 
         [HttpGet("is-full")]
@@ -46,22 +70,22 @@ namespace GameServer.Controllers
             {
                 //if (AllPlayersReady())
                 //{
-                    var game = _gameContext.Game.Find(1);
-                    game.Full = true;
+                var game = _gameContext.Game.Find(1);
+                game.Full = true;
+                _gameContext.Game.Update(game);
+                _gameContext.SaveChanges();
+
+                if (!game.IsMapReady)
+                {
+                    game.IsMapReady = true;
                     _gameContext.Game.Update(game);
                     _gameContext.SaveChanges();
 
-                    if (!game.IsMapReady)
-                    {
-                        game.IsMapReady = true;
-                        _gameContext.Game.Update(game);
-                        _gameContext.SaveChanges();
+                    MapFacade mapFacade = new MapFacade(_obstacleContext, _weaponContext);
+                    mapFacade.generateMap();
+                }
 
-                        MapFacade mapFacade = new MapFacade(_obstacleContext, _weaponContext);
-                        mapFacade.generateMap();
-                    }
-
-                    return true;
+                return true;
                 //}
                 //else
                 //{
@@ -104,7 +128,7 @@ namespace GameServer.Controllers
         {
             var game = _gameContext.Game.Find(1);
 
-            
+
 
             if (_playerContext.Players.Count() < 1)
             {
@@ -141,18 +165,25 @@ namespace GameServer.Controllers
             }
 
             return false;
-            
+
         }
 
         // PUT api/game/shoot
         [HttpPut("shoot")]
-        public IActionResult ShootMethod([FromBody] List<int> parameters)
+        public ActionResult<Object> ShootMethod([FromBody] List<int> parameters)
         {
             int x = parameters[0];
             int y = parameters[1];
             int px = parameters[2];
             int py = parameters[3];
             long shooterId = (long)parameters[4];
+
+            var information = new
+            {
+                x = 0,
+                y = 0,
+                damage = 0
+            };
 
             List<int> posx = new List<int>();
             List<int> posy = new List<int>();
@@ -173,6 +204,8 @@ namespace GameServer.Controllers
             posx.Add(x);
             posy.Add(y);
 
+            MainDamageCounter.EmptyDamageSum();
+
             for (int i = 0; i < posx.Count; i++)
             {
                 foreach (var player in _playerContext.Players)
@@ -181,8 +214,12 @@ namespace GameServer.Controllers
                     {
                         if (player.PosY - 12 < posy[i] && posy[i] < player.PosY + 12)
                         {
-                            player.Health -= 50;
-                            if(player.Health <= 0)
+                            //MainDamageCounter.DamageSum = 0;
+                            double distance = GetDistanceLength(posx[i], posy[i], (int)player.PosX, (int)player.PosY);
+                            MainDamageCounter.Calculate(distance);
+                            player.Health -= (int)MainDamageCounter.GetDamageSum();
+
+                            if (player.Health <= 0)
                             {
                                 foreach (Player contextplayer in _playerContext.Players)
                                 {
@@ -190,21 +227,45 @@ namespace GameServer.Controllers
                                     _playerContext.Players.Update(contextplayer);
                                 }
                             }
+
+                            var information1 = new
+                            {
+                                x = player.PosX,
+                                y = player.PosY,
+                                damage = (int)MainDamageCounter.GetDamageSum()
+                            };
+                            
                             _playerContext.Players.Update(player);
                             _playerContext.SaveChanges();
-                            return Ok();
+                            return information1;
+                            //return Ok();
+                            //return (int)MainDamageCounter.GetDamageSum();
                         }
                     }
                 }
-                
+
                 i++;
             }
-            return Ok();
+            return information;
+            //return Ok();
+            //return (int)MainDamageCounter.GetDamageSum();
+        }
+
+        [HttpGet("reset")]
+        public ActionResult<bool> ResetGame()
+        {
+            foreach (var player in _playerContext.Players)
+            {
+                _playerContext.Players.Remove(player);
+            }
+            _playerContext.SaveChanges();
+            
+            return true;
         }
 
         public bool AllPlayersReady()
         {
-            foreach(Player player in _playerContext.Players)
+            foreach (Player player in _playerContext.Players)
             {
                 if (!player.IsReady)
                 {
@@ -212,6 +273,12 @@ namespace GameServer.Controllers
                 }
             }
             return true;
+        }
+
+        public double GetDistanceLength(int x, int y, int px, int py)
+        {
+            double D = Math.Sqrt(Math.Pow(px - x, 2) + Math.Pow(py - y, 2));
+            return D;
         }
 
     }

@@ -22,6 +22,9 @@ namespace WpfApp1
         Player myPlayer;
         RequestsController requestController = new RequestsController();
         Line laser;
+        Label damageText = new Label();
+        System.Windows.Threading.DispatcherTimer labelTimer = new System.Windows.Threading.DispatcherTimer();
+
         public GameplayWindow(Player myPlayer, string url)
         {
             InitializeComponent();
@@ -82,12 +85,24 @@ namespace WpfApp1
             // Add line to the Grid.  
             LayoutRoot.Children.Add(laser);
 
+            //Add text to the grid
+            damageText.Width = 40;
+            damageText.Height = 40;
+            damageText.FontSize = 14;
+            damageText.FontFamily = new FontFamily("Consolas");
+            damageText.Foreground = Brushes.Red;
+            LayoutRoot.Children.Add(damageText);
+
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += timer1_TickAsync;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 300);
             dispatcherTimer.Start();
             Focus();
+
+            labelTimer.Tick += damageLabelTimer;
+            labelTimer.Interval = new TimeSpan(0, 0, 0, 0, 1500);
+
         }
 
         private void Form1_PaintPlayer(Player player)
@@ -110,6 +125,13 @@ namespace WpfApp1
             if (player.GetEquippedWeapon() != null)
             {
                 UpdateWeaponPos(player.GetEquippedWeapon());
+            }
+
+            if (laser != null && player.Id == myPlayer.Id)
+            {
+                laser.X1 = player.PosX;
+                laser.Y1 = player.PosY;
+                laser.RenderTransform = new TranslateTransform();
             }
         }
 
@@ -222,6 +244,7 @@ namespace WpfApp1
                                 //formGraphics.DrawImage(image, (int)oldPlayer.PosX, (int)oldPlayer.PosY);
 
                                 this.Form1_PaintPlayer(p);
+                                
                             }
                             else
                             {
@@ -389,7 +412,7 @@ namespace WpfApp1
 
         private async void Form1_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            await requestController
+            dynamic damageDone = await requestController
                   .ShootRequest(
                         requestController.client.BaseAddress.PathAndQuery,
                         (int)myPlayer.PosX,
@@ -397,10 +420,19 @@ namespace WpfApp1
                         (int)e.GetPosition(LayoutRoot).X,
                         (int)e.GetPosition(LayoutRoot).Y,
                         myPlayer.Id);
+            if ((int)damageDone.damage > 0)
+            {
+                damageText.Content = (string)damageDone.damage;
+                damageText.RenderTransform = new TranslateTransform((int)damageDone.x - 400, (int)damageDone.y - 300);
+                labelTimer.Stop();
+                labelTimer.Start();
+            }
+        }
 
-            //Pen pen = new Pen(Color.Black);
-            //formGraphics.DrawLine(pen, e.X, e.Y, myPlayer.PosX + 25, myPlayer.PosY + 25);
-            //this.Invalidate()
+        private async void damageLabelTimer(object sender, EventArgs e)
+        {
+            damageText.RenderTransform = new TranslateTransform(-600, -600);
+            labelTimer.Stop();
         }
     }
 }

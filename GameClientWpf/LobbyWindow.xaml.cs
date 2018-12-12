@@ -42,6 +42,7 @@ namespace WpfApp1
                 myPlayer.SetPlayerTemplate(myPlayer);
                 if (myPlayer.IsHost)
                 {
+                    startgameButton.Visibility = Visibility.Visible;
                     startgameButton.IsEnabled = false;
                     backgameButton.IsEnabled = false;
                 }
