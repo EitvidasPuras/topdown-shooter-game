@@ -33,6 +33,7 @@ namespace WpfApp1
         {
             InitializeComponent();
             this.myPlayer = myPlayer;
+            myPlayer.setState();
             url1 = url;
         }
 
@@ -271,6 +272,8 @@ namespace WpfApp1
                             if (p.Id == myPlayer.Id)
                             {
                                 myPlayer = p;
+                                myPlayer.setState();
+
                             }
                             else
                             {
@@ -322,40 +325,42 @@ namespace WpfApp1
         //reaguoja į paspaustus mygtukus
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+
+            long moveStep = (long)myPlayer.state.getMovementStep();
             
             switch (e.Key)
             {
                 case Key.W:
-                    if (!CheckIfTouchesObstacle(myPlayer, 'w'))
+                    if (!CheckIfTouchesObstacle(myPlayer, 'w', moveStep))
                     {
-                        myPlayer.PosY -= 2;
+                        myPlayer.PosY -= moveStep;
                         CheckIfWeaponNearby();
                         moved = true;
                         Form1_PaintPlayer(myPlayer);
                     }
                     break;
                 case Key.A:
-                    if (!CheckIfTouchesObstacle(myPlayer, 'a'))
+                    if (!CheckIfTouchesObstacle(myPlayer, 'a', moveStep))
                     {
-                        myPlayer.PosX -= 2;
+                        myPlayer.PosX -= moveStep;
                         CheckIfWeaponNearby();
                         moved = true;
                         Form1_PaintPlayer(myPlayer);
                     }
                     break;
                 case Key.S:
-                    if (!CheckIfTouchesObstacle(myPlayer, 's'))
+                    if (!CheckIfTouchesObstacle(myPlayer, 's', moveStep))
                     {
-                        myPlayer.PosY += 2;
+                        myPlayer.PosY += moveStep;
                         CheckIfWeaponNearby();
                         moved = true;
                         Form1_PaintPlayer(myPlayer);
                     }
                     break;
                 case Key.D:
-                    if (!CheckIfTouchesObstacle(myPlayer, 'd'))
+                    if (!CheckIfTouchesObstacle(myPlayer, 'd', moveStep))
                     {
-                        myPlayer.PosX += 2;
+                        myPlayer.PosX += moveStep;
                         CheckIfWeaponNearby();
                         Form1_PaintPlayer(myPlayer);
                         moved = true;
@@ -479,7 +484,7 @@ namespace WpfApp1
             laserTimer.Stop();
         }
 
-        private bool CheckIfTouchesObstacle(Player player, char move)
+        private bool CheckIfTouchesObstacle(Player player, char move, long moveStep)
         {
             long newPosX = player.PosX;
             long newPosY = player.PosY;
@@ -487,16 +492,16 @@ namespace WpfApp1
             switch (move)
             {
                 case 'w':
-                    newPosY -= 2;
+                    newPosY -= moveStep;
                     break;
                 case 'a':
-                    newPosX -= 2;
+                    newPosX -= moveStep;
                     break;
                 case 's':
-                    newPosY += 2;
+                    newPosY += moveStep;
                     break;
                 case 'd':
-                    newPosX += 2;
+                    newPosX += moveStep;
                     break;
             }
             foreach (var obstacle in obstacleList)

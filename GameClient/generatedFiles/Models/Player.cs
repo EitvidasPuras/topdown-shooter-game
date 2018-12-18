@@ -1,6 +1,7 @@
 
 
 using GameClient.generatedFiles.Models;
+using GameServer.Interfaces;
 using System;
 /**
 * @(#) Player.cs
@@ -29,6 +30,23 @@ namespace GameServer
 
             public bool ChangedStatus { get; set; }
 
+            public IState state { get; set; }
+
+            public void setState()
+            {
+                if(Health > 70)
+                {
+                    state = new HealthyState();
+                }
+                else if(Health > 50)
+                {
+                    state = new HurtedState();
+                }
+                else
+                {
+                    state = new CriticalState();
+                }
+            }
             public void SetFakeWeapons()
             {
                 Random rnd = new Random();
@@ -105,7 +123,7 @@ namespace GameServer
 
             public bool checkEquality(Player newData)
 			{
-                if (this.PosX != newData.PosX || this.PosY != newData.PosY)
+                if (this.PosX != newData.PosX || this.PosY != newData.PosY || Health != newData.Health)
                 {
                     return false;
                 }

@@ -181,6 +181,7 @@
     <Compile Include="generatedFiles\Interfaces\IClonable.cs" />
     <Compile Include="generatedFiles\Interfaces\IBuilder.cs" />
     <Compile Include="generatedFiles\Interfaces\IObstacleFactory.cs" />
+    <Compile Include="generatedFiles\Interfaces\IState.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\AbstractWeaponFactory.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\AK47.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\AnyWeaponFactory.cs" />
@@ -208,6 +209,9 @@
     <Compile Include="generatedFiles\Models\Builder\PrimaryWeaponBuilder.cs" />
     <Compile Include="generatedFiles\Models\AbstractFactory\Secondary.cs" />
     <Compile Include="generatedFiles\Models\Builder\SecondaryWeaponBuilder.cs" />
+    <Compile Include="generatedFiles\Models\State\HurtedState.cs" />
+    <Compile Include="generatedFiles\Models\State\HealthyState.cs" />
+    <Compile Include="generatedFiles\Models\State\CriticalState.cs" />
     <Compile Include="generatedFiles\Models\Template\PlayerTemplate.cs" />
     <Compile Include="generatedFiles\Models\SingletonLog.cs" />
     <Compile Include="generatedFiles\Models\Weapon.cs" />
