@@ -64,6 +64,9 @@
     <Compile Include="DeathWindow.xaml.cs">
       <DependentUpon>DeathWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FlyweightFactory.cs" />
+    <Compile Include="GameImage.cs" />
+    <Compile Include="Interface1.cs" />
     <Compile Include="LobbyWindow.xaml.cs">
       <DependentUpon>LobbyWindow.xaml</DependentUpon>
     </Compile>
