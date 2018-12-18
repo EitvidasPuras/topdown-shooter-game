@@ -8,14 +8,20 @@ namespace WpfApp1
 {
     class FlyweightFactory
     {
-        private Dictionary<string, IFlyweight> flyweights = new Dictionary<string, IFlyweight>();
+        private Dictionary<string, IFlyweight> flyweights;
+
+        public FlyweightFactory()
+        {
+            flyweights = new Dictionary<string, IFlyweight>();
+        }
+
         public IFlyweight GetFlyweight(string key)
         {
             IFlyweight flyweight;
             if (!flyweights.TryGetValue(key, out flyweight))
             {
                 flyweight = new GameImage(key);
-                
+                flyweights.Add(key, flyweight);
             }
             return flyweight;
         }

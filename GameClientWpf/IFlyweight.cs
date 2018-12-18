@@ -9,5 +9,7 @@ namespace WpfApp1
     interface IFlyweight
     {
         void Move(int posX, int posY);
+
+        object Clone();
     }
 }

@@ -46,11 +46,12 @@ namespace WpfApp1
         List<GameServer.Interfaces.ISkin> listOfDrawers = new List<GameServer.Interfaces.ISkin>();
         bool moved = false;
 
-        Dictionary<long, Image> UIPlayers = new Dictionary<long, Image>();
-        Dictionary<long, Image> UIWeapons = new Dictionary<long, Image>();
+        Dictionary<long, GameImage> UIPlayers = new Dictionary<long, GameImage>();
+        Dictionary<long, GameImage> UIWeapons = new Dictionary<long, GameImage>();
         Dictionary<long, Label> UIPlayerNames = new Dictionary<long, Label>();
 
         ObserverController observer = new ObserverController();
+        FlyweightFactory _flyweightFactory = new FlyweightFactory();
 
         // pagetina visus playerius ir juos atvaizduoja, vėliau sukuria playeri esančiam klientui
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -127,27 +128,25 @@ namespace WpfApp1
 
         private void Form1_PaintPlayer(Player player)
         {
-            Image img;
+            GameImage img;
             Label playerName = null;
             if (UIPlayers.TryGetValue(player.Id, out img)
                 && UIPlayerNames.TryGetValue(player.Id, out playerName))
             {
-                img.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 300);
+                img.Move((int)player.PosX, (int)player.PosY);
                 playerName.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 320);
             }
             else
             {
-                img = new Image();
+                img = (GameImage)_flyweightFactory.GetFlyweight("Player").Clone();
+                img.Move((int)player.PosX, (int)player.PosY);
                 LayoutRoot.Children.Add(img);
-                img.Source = new BitmapImage(new Uri("/images/basicPlayer.png", UriKind.Relative));
-                img.Margin = new Thickness(0, 0, 0, 0);
-                img.Height = 50;
                 UIPlayers.Add(player.Id, img);
                 playerName = CreateNameLabel(player.Name);
                 UIPlayerNames.Add(player.Id, playerName);
                 LayoutRoot.Children.Add(playerName);
                 playerName.RenderTransform = new TranslateTransform((int)player.PosX - 400, (int)player.PosY - 320);
-                img.RenderTransform = new TranslateTransform(player.PosX - 400, player.PosY - 300);
+                
             }
             if (player.GetEquippedWeapon() != null)
             {
@@ -176,42 +175,15 @@ namespace WpfApp1
 
         private void Form1_PaintWeapons(Weapon weapon)
         {
-            Image img = new Image();
-            
+            GameImage img = (GameImage)_flyweightFactory.GetFlyweight(weapon.GetType().Name).Clone();
             LayoutRoot.Children.Add(img);
-            if (weapon.Name.Contains("AK47"))
-            {
-                img.Source = new BitmapImage(new Uri("/images/ak47.png", UriKind.Relative));
-                img.Height = 15;
-            }
-            else if (weapon.Name.Contains("M4A1"))
-            {
-                img.Source = new BitmapImage(new Uri("/images/m4a1.png", UriKind.Relative));
-                img.Height = 15;
-            }
-            else if (weapon.Name.Contains("DesertEagle"))
-            {
-                img.Source = new BitmapImage(new Uri("/images/deserteagle.png", UriKind.Relative));
-                img.Height = 15;
-            }
-            else if (weapon.Name.Contains("P250"))
-            {
-                img.Source = new BitmapImage(new Uri("/images/p250.png", UriKind.Relative));
-                img.Height = 15;
-            }
-            else if (weapon.Name.Contains("Grenade"))
-            {
-                img.Source = new BitmapImage(new Uri("/images/grenade.png", UriKind.Relative));
-                img.Height = 15;
-            }
-            img.Margin = new Thickness(0, 0, 0, 0);
-            img.RenderTransform = new TranslateTransform(weapon.PosX - 400, weapon.PosY - 300);
+            img.Move((int)weapon.PosX, (int)weapon.PosY);
             UIWeapons.Add(weapon.Id, img);
         }
 
         private void UpdateWeaponPos(Weapon weapon)
         {
-            Image img;
+            GameImage img;
             if (UIWeapons.TryGetValue(weapon.Id, out img))
             {
                 bool visible = false;
@@ -222,9 +194,11 @@ namespace WpfApp1
                         if (p.GetEquippedWeapon() != null && p.GetEquippedWeapon().Id == weapon.Id)
                         {
                             if (p.Id == myPlayer.Id)
-                                img.RenderTransform = new TranslateTransform(myPlayer.PosX - 400, myPlayer.PosY - 300 - 10);
+                                img.Move((int)myPlayer.PosX, (int)myPlayer.PosY - 10);
+                            //img.RenderTransform = new TranslateTransform(myPlayer.PosX - 400, myPlayer.PosY - 300 - 10);
                             else
-                                img.RenderTransform = new TranslateTransform(p.PosX - 400, p.PosY - 300 - 10);
+                                img.Move((int)p.PosX, (int)p.PosY);
+                          //  img.RenderTransform = new TranslateTransform(p.PosX - 400, p.PosY - 300 - 10);
                             visible = true;
                             img.Visibility = Visibility.Visible;
                             break;
@@ -237,7 +211,8 @@ namespace WpfApp1
                     if (visible)
                     {
                         img.Visibility = Visibility.Visible;
-                        img.RenderTransform = new TranslateTransform(weapon.PosX - 400, weapon.PosY - 300);
+                        img.Move((int)weapon.PosX, (int)weapon.PosY);
+                        //img.RenderTransform = new TranslateTransform(weapon.PosX - 400, weapon.PosY - 300);
                     }
                     else
                     {
@@ -255,7 +230,7 @@ namespace WpfApp1
                 var patchStatusCode = await requestController.UpdatePlayerAsync(myPlayer);
                 moved = false;
             }
-
+            
             bool updated = await observer.CheckIfChangedAsync(requestController.client.BaseAddress.ToString(), myPlayer);
             if (updated)
             {
@@ -293,7 +268,7 @@ namespace WpfApp1
                             //Application.Current.Shutdown();
                         }
 
-                        Image img;
+                        GameImage img;
                         if (UIPlayers.TryGetValue(oldPlayer.Id, out img))
                         {
                             //img.RenderTransform = new TranslateTransform(-900,-900);
